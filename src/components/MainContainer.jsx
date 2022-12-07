@@ -7,23 +7,57 @@ import { useStateValue } from "../context/StateProvider";
 import MenuContainer from "./MenuContainer";
 import CartContainer from "./CartContainer";
 import NotFound from "../img/NotFound.svg";
+import { useQuery } from "react-query";
+import { getAllCategories, saveCategory,getAllFreshCategories,saveFreshCategory } from "../utils/firebaseFunctions";
 import Footer from "./Footer"
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  setDoc,
+} from "firebase/firestore";
+import { firestore } from "../firebase.config";
 const MainContainer = () => {
   const [{ freshfoodItems, cartShow }, dispatch] = useStateValue();
   const [scrollValue, setScrollValue] = useState(0);
   const [filter, setFilter] = useState("fruit");
   const [{foodfreshCategory}] = useStateValue();
- 
+const [freshfood,setfreshfood] = useState()
+const [freshfooditems,setfreshfooditems] = useState()
+
+const getAllFreshCategories = async () => {
+  const items = await getDocs(
+    query(collection(firestore, "freshfoodCategory"))
+  );
+
+  setfreshfood(items.docs.map((doc) => doc.data()));
+  console.log(items)
+};
+
+const getAllfreshFoodItems = async () => {
+  const items = await getDocs(
+    query(collection(firestore, "freshfoodItems"), orderBy("id", "desc"))
+  );
+
+  setfreshfooditems(items.docs.map((doc) => doc.data()));
+};
+
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostPerPage] = useState(5);
   
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = foodfreshCategory?.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = freshfood?.slice(indexOfFirstPost, indexOfLastPost);
 
   const paginate = pageNumber => setCurrentPage(pageNumber);
  
-  useEffect(() => {}, [scrollValue, cartShow]);
+  useEffect(() => {
+    getAllFreshCategories()
+    getAllfreshFoodItems()
+  
+  }, [scrollValue, cartShow]);
 
   return (
     <div className="w-full h-auto flex flex-col items-center justify-center ">
@@ -104,11 +138,11 @@ const MainContainer = () => {
            data={foodCategory}
          /> */}
        </div>
-  <Footer className="justify-center items-center" postsPerPage={postsPerPage} totalPosts={foodfreshCategory?.length} paginate={paginate}/>
+  <Footer className="justify-center items-center" postsPerPage={postsPerPage} totalPosts={freshfood?.length} paginate={paginate} currentPage={currentPage}/>
        <div className="w-full">
          <RowContainer
            flag={false}
-           data={freshfoodItems?.filter((n) => n.category == filter)}
+           data={freshfooditems?.filter((n) => n.category == filter)}
          />
        </div>
        </div>

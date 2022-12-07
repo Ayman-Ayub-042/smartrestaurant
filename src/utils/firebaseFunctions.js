@@ -20,7 +20,7 @@ export const getAllUser = async () => {
     query(collection(firestore, "User"), orderBy("id", "desc"))
   );
 
-  return user.docs.map((doc) => doc.data());
+  return user.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 };
 // Saving new Item
 export const saveItem = async (data) => {

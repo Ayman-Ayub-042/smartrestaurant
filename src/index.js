@@ -10,17 +10,20 @@ import { initialState } from "./context/initalState";
 import reducer from "./context/reducer";
 import Login from "./pages/Login"
 import Signup from "./pages/Signup";
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+const queryClient = new QueryClient()
 ReactDOM.render(
   <AuthProvider>
+
   <Router>
     <StateProvider initialState={initialState} reducer={reducer}>
     <Routes>
           <Route
             path="/*"
             element={
-              <RequireAuth>
+              // <RequireAuth>
                 <App />
-              </RequireAuth>
+              // </RequireAuth>
             }
           />
           <Route path="/login" element={<Login />} />
@@ -28,6 +31,7 @@ ReactDOM.render(
         </Routes>
     </StateProvider>
   </Router>
+
   </AuthProvider>,
   document.getElementById("root")
 );

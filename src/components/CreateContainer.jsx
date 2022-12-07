@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import {
@@ -8,6 +8,15 @@ import {
   MdFoodBank,
   MdAttachMoney,
 } from "react-icons/md";
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  setDoc,
+} from "firebase/firestore";
+import { firestore } from "../firebase.config";
 import { categories } from "../utils/data";
 import Loader from "./Loader";
 import {
@@ -36,6 +45,23 @@ const CreateContainer = () => {
   const [{ foodItems }, dispatch] = useStateValue();
   const [{foodCategory}] = useStateValue();
   const [{foodfreshCategory}] = useStateValue();
+  const [freshfood,setfreshfood] = useState()
+  const [food,setfood] = useState()
+  const getAllCategories = async () => {
+    const items = await getDocs(
+      query(collection(firestore, "foodCategory"))
+    );
+  
+    setfood(items.docs.map((doc) => doc.data()));
+  };
+const getAllFreshCategories = async () => {
+  const items = await getDocs(
+    query(collection(firestore, "freshfoodCategory"))
+  );
+
+  setfreshfood(items.docs.map((doc) => doc.data()));
+  console.log(items)
+};
   const uploadImage = (e) => {
     setIsLoading(true);
     const imageFile = e.target.files[0];
@@ -204,7 +230,11 @@ const CreateContainer = () => {
       });
     });
   };
-
+  useEffect(() => {
+    getAllCategories()
+    getAllFreshCategories()
+  
+  }, []);
   return (
     <div className="w-full min-h-screen flex items-center justify-center">
       <div className="w-[90%] md:w-[50%] border border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
@@ -243,8 +273,8 @@ const CreateContainer = () => {
             <option value="other" className="bg-white">
               Select Category for hot deal
             </option>
-            {foodCategory &&
-            foodCategory.map((item) => (
+            {food &&
+            food.map((item) => (
                 <option
                   key={item.id}
                   className="text-base border-0 outline-none capitalize bg-white text-headingColor"
@@ -266,8 +296,8 @@ const CreateContainer = () => {
             <option value="other" className="bg-white">
               Select Category for fresh food
             </option>
-            {foodfreshCategory &&
-            foodfreshCategory.map((item) => (
+            {freshfood &&
+            freshfood.map((item) => (
                 <option
                   key={item.id}
                   className="text-base border-0 outline-none capitalize bg-white text-headingColor"

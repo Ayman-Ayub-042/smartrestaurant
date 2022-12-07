@@ -10,7 +10,7 @@ export const AuthProvider = (props) => {
   };
 
   const logout = () => {
-    localStorage.removeItem("user");
+    // localStorage.removeItem("user");
     setUser(null);
   };
 

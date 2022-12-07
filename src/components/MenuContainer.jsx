@@ -9,6 +9,15 @@ import { useStateValue } from "../context/StateProvider";
 import RowContainer1 from "./RowContainer1";
 import NotFound from "../img/NotFound.svg";
 import Footer from "./Footer"
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  setDoc,
+} from "firebase/firestore";
+import { firestore } from "../firebase.config";
 const MenuContainer = (datacategory) => {
   const [filter, setFilter] = useState("Chicken");
   const [{foodCategory}] = useStateValue();
@@ -16,15 +25,38 @@ const MenuContainer = (datacategory) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostPerPage] = useState(5);
   const [isMenu, setIsMenu] = useState(false);
+  const [food,setfood] = useState()
+const [fooditems,setfooditems] = useState()
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = foodCategory?.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = food?.slice(indexOfFirstPost, indexOfLastPost);
+  const getAllFoodItems = async () => {
+    const items = await getDocs(
+      query(collection(firestore, "foodItems"), orderBy("id", "desc"))
+    );
+  
+    setfooditems(items.docs.map((doc) => doc.data()));
+  };
+
+  const getAllCategories = async () => {
+    const items = await getDocs(
+      query(collection(firestore, "foodCategory"))
+    );
+  
+    setfood(items.docs.map((doc) => doc.data()));
+  };
   const login = async () => {
    
       setIsMenu(!isMenu);
     
   };
   const paginate = pageNumber => setCurrentPage(pageNumber);
+
+  useEffect(() => {
+    getAllCategories()
+    getAllFoodItems()
+  
+  }, []);
   return (
     <section className="w-full my-6" id="menu">
       <div className="w-full flex flex-col items-center justify-center">
@@ -116,11 +148,11 @@ const MenuContainer = (datacategory) => {
                 </p>
               </motion.div>
             )} */}
-   <Footer postsPerPage={postsPerPage} totalPosts={foodCategory?.length} paginate={paginate}/>
+   <Footer postsPerPage={postsPerPage} currentPage={currentPage} totalPosts={food?.length} paginate={paginate}/>
         <div className="w-full">
           <RowContainer
             flag={false}
-            data={foodItems?.filter((n) => n.category == filter)}
+            data={fooditems?.filter((n) => n.category == filter)}
           />
         </div>
       </div>

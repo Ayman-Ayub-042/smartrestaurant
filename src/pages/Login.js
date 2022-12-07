@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import "../styles/Login.css"
 import "../styles/headline.css"
 import "../styles/inputField.css"
@@ -16,17 +16,35 @@ import { useAuth } from "../context/auth";
 import { auth } from '../firebase.config';
 import { createUserWithEmailAndPassword , signInWithEmailAndPassword} from "firebase/auth";
 import InputField from '../components/InputField';
-function Login() {
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  setDoc,
+} from "firebase/firestore";
+import { firestore } from "../firebase.config";
+const Login = () => {
 
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const firebaseAuth = getAuth(app);
     const provider = new GoogleAuthProvider();
+    const [getuser,setgetuser]=useState();
     const { login } = useAuth();
     const [{ user }, dispatch] = useStateValue();
     const [isMenu, setIsMenu] = useState(false);
     const [err, setErr] = useState(false);
+    const getAllUser = async () => {
+      const user = await getDocs(
+        query(collection(firestore, "User"), orderBy("id", "desc"))
+      );
+    
+      setgetuser(user.docs.map((doc) => doc.data()));
+      console.log(getuser)
+    };
     const login1 = async () => {
       if (!user) {
        
@@ -49,26 +67,36 @@ function Login() {
   
     
     const signIn = (e) => {
-     
+      {getuser.map((val,ind) => {
         if (
-           user &&
-          email === user.email &&
-          password === user.password
+          email === val.email &&
+          password === val.password
         ) {
+          dispatch({
+            type: actionType.SET_USER,
+            user: getuser,
+          });
           login("user");
-          localStorage.setItem("user", "user");
-          console.log(user[0]);
+           localStorage.setItem("user", getuser);
+          console.log(getuser[0]);
           navigate("/*", { replace: true });
           setErr(false);
           console.log("login")
         } else {
           setErr(true);
+        
+          // window.location.reload(true);
           // navigate("/signup", { replace: true });
         }
+      })}
       };
 
        
-    
+      useEffect(() => {
+        getAllUser()
+        
+      
+      }, []);
 
    
   return (
