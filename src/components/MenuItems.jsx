@@ -42,7 +42,7 @@ const MenuItems = ({ flag, data, scrollValue }) => {
     localStorage.setItem("cartItems", JSON.stringify(items));
   };
   const login1 = async (title,id) => {
-    if (user && user.email === "aymanbilal042@gmail.com") {
+    if (user && user.email === "admin@gmail.com") {
       settitle(title)
       setid(id)
          setIsMenu(!isMenu);

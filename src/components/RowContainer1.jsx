@@ -42,7 +42,7 @@ const RowContainer = ( {flag, data, scrollValue,deleteitem }) => {
     localStorage.setItem("cartItems", JSON.stringify(items));
   };
   const login1 = async (title,id) => {
-    if (user && user.email === "aymanbilal042@gmail.com") {
+    if (user && user.email === "admin@gmail.com") {
       settitle(title)
       setid(id)
          setIsMenu(!isMenu);
@@ -96,12 +96,12 @@ const RowContainer = ( {flag, data, scrollValue,deleteitem }) => {
                 <MdShoppingBasket className="text-white" />
               </motion.div>
               
-              {user && user.email === "aymanbilal042@gmail.com" && (
+              {user && user.email === "admin@gmail.com" && (
               <motion.div
              
              whileTap={{ scale: 0.75 }}
              className=" h-8 rounded-full flex items-center justify-center cursor-pointer hover:shadow-md -mt-16 -ml-8"
-             onClick={() => {login1(item?.title,item?.id)}}
+            //  onClick={() => {login1(item?.title,item?.id)}}
            >
              <HiDotsVertical style={{cursor:'pointer',}} />
            </motion.div>)}

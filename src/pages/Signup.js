@@ -46,6 +46,7 @@ import { auth } from '../firebase.config';
 import { createUserWithEmailAndPassword , signInWithEmailAndPassword} from "firebase/auth";
 import InputField from '../components/InputField';
 import { useEffect } from 'react';
+import { stringify } from 'postcss';
 function Signup() {
   const [imageAsset, setImageAsset] = useState(null);
   const [fields, setFields] = useState(false);
@@ -60,6 +61,8 @@ function Signup() {
    const [getemail, setgetemail]=useState('');
    const [err, setErr] = useState(false);
     const [password, setPassword] = useState('');
+    const getemails= [];
+   
     const getAllUser = async () => {
       const user = await getDocs(
         collection(firestore, "User")
@@ -67,15 +70,21 @@ function Signup() {
     
       setgetuser(user.docs.map((doc) => doc.data()));
     console.log(getuser)
-
+    // {getuser?.filter((val,ind)=>{
+    //   var data = getuser?.filter(val => val.email === email)
+    // console.log(data); 
+    // getemails.push(data.email)
+    // console.log(getemails[0]); 
+  //  })}
     
     };
+   
     const getAllemail = async () => {
       {getuser?.map((val,ind)=>{
          setgetemail(val.email)
-         
+         console.log(getemail)
       })}
-      console.log(getemail)
+     
     }
     const uploadImage = (e) => {
       setIsLoading(true);
@@ -129,7 +138,12 @@ function Signup() {
     };
     const saveDetails = () => {
       setIsLoading(true);
-      if(email===getemail){
+      var data = getuser?.filter(val => val.email === email)
+      console.log(data); 
+      getemails.push(data[0]?.email)
+      console.log(getemails); 
+      if(getemails[0] === email){
+        setMsg("Email Already Exist");
         alert("user already exist")
        
       }
@@ -175,6 +189,7 @@ function Signup() {
         }, 4000);
       }
     }
+
       fetchuserData();
     };
     const clearData = () => {

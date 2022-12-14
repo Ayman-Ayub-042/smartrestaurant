@@ -22,6 +22,7 @@ import {
   getDocs,
   orderBy,
   query,
+  where,
   setDoc,
 } from "firebase/firestore";
 import { firestore } from "../firebase.config";
@@ -33,6 +34,7 @@ const Login = () => {
     const firebaseAuth = getAuth(app);
     const provider = new GoogleAuthProvider();
     const [getuser,setgetuser]=useState();
+    const [getemailuser,setgetemailuser]=useState([]);
     const { login } = useAuth();
     const [{ user }, dispatch] = useStateValue();
     const [isMenu, setIsMenu] = useState(false);
@@ -44,6 +46,16 @@ const Login = () => {
     
       setgetuser(user.docs.map((doc) => doc.data()));
       console.log(getuser)
+    };
+
+    const getUser = async () => {
+     {getuser.map((val)=>{
+      if(val.email===email){
+        setgetemailuser(getuser)
+      }
+     })
+     console.log(getemailuser)
+    }
     };
     const login1 = async () => {
       if (!user) {
@@ -65,8 +77,12 @@ const Login = () => {
       }
     };
   
-    
+    const getemail= [];
     const signIn = (e) => {
+      var data = getuser?.filter(val => val.email === email)
+      console.log(data); 
+      getemail.push(data[0])
+      console.log(getemail); 
       {getuser.map((val,ind) => {
         if (
           email === val.email &&
@@ -77,11 +93,11 @@ const Login = () => {
           console.log("true")
           dispatch({
             type: actionType.SET_USER,
-            user: getuser['2'],
+            user: getemail[0],
           });
           login("user");
-           localStorage.setItem("user",JSON.stringify( getuser['2']));
-          console.log(getuser['2']);
+           localStorage.setItem("user",JSON.stringify( getemail[0]));
+          console.log(getemail[0]);
           navigate("/*", { replace: true });
           // setErr(false);
           // console.log("login")
