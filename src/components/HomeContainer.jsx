@@ -2,9 +2,13 @@ import React from "react";
 import Delivery from "../img/delivery.png";
 import HeroBg from "../img/heroBg.png";
 import { heroData } from "../utils/data";
+import MainContainer from "./MainContainer";
+import MenuContainer from "./MenuContainer";
 
 const HomeContainer = () => {
   return (
+    <div className="w-full h-auto flex flex-col items-center justify-center ">
+     
     <section
       className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full "
       id="home"
@@ -79,6 +83,9 @@ const HomeContainer = () => {
         </div>
       </div>
     </section>
+    <MainContainer/>
+    <MenuContainer/>
+    </div>
   );
 };
 

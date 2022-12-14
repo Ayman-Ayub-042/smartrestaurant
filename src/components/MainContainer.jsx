@@ -105,7 +105,7 @@ const deletefreshitem = async (id) => {
 
   return (
     <div className="w-full h-auto flex flex-col items-center justify-center ">
-      <HomeContainer />
+      
 
       <section className="w-full my-6">
         <div className="w-full flex flex-col items-center justify-center">
@@ -231,7 +231,7 @@ const deletefreshitem = async (id) => {
        
       </section>
 
-      <MenuContainer />
+      
 
       {cartShow && <CartContainer />}
     </div>
