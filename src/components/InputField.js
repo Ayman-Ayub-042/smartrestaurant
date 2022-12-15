@@ -3,7 +3,7 @@ import "../styles/inputField.css";
 const InputField = (props) => {
   return (
     <div className="input" style={props.style}>
-      {props.icon ? <props.icon className="icon" /> : ""}
+      {props.icon ? <props.icon className="icon w-5" /> : ""}
       <input
         name={props.name}
         type={props.type}
@@ -14,7 +14,7 @@ const InputField = (props) => {
         onChange={props.changeHandler}
        
       ></input>
-      {props.icon2 ? <props.icon2 className="icon" style={props.icon2style} /> : ""}
+      {/* {props.icon2 ? <props.icon2 className="icon" style={props.icon2style} /> : ""} */}
     </div>
   );
 };

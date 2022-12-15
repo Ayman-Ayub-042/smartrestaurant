@@ -350,7 +350,7 @@ function Signup() {
             />
                 
                 </div>
-                <button type='submit'  onClick={saveDetails} className='login_signinButton'>Create Account</button>
+                <button type='submit'  onClick={saveDetails} className='login_signinButton rounded-1 w-40 mx-40 items-center justify-center'>Create Account</button>
                 <Link to="/login">
             <button type='submit' className='login_registerButton'>Go To SignIn Page</button>
 </Link>

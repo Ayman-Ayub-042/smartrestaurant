@@ -63,60 +63,159 @@ const EditUser = () => {
    const [getemailupdate, setgetemailupdate]=useState('');
    const [err, setErr] = useState(false);
     const [passwordupdate, setPasswordupdate] = useState('');
-    const getemails= [];
-    var data = userData?.filter(val => val.email === user.email)
-    console.log(data); 
-    getemails.push(data[0])
-    console.log(getemails[0]); 
-    const addrefUser = query(collection(firestore, "User"), where("email", "==", user.email));;
+    
+    const addrefUser = query(collection(firestore, "User"), where("email", "==", user.email));
+    const uploadImage = (e) => {
+      setIsLoading(true);
+      const imageFile = e.target.files[0];
+      const storageRef = ref(storage, `Images/${Date.now()}-${imageFile.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, imageFile);
+  
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const uploadProgress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        },
+        (error) => {
+          console.log(error);
+          setFields(true);
+          setMsg("Error while uploading : Try AGain 🙇");
+          setAlertStatus("danger");
+          setTimeout(() => {
+            setFields(false);
+            setIsLoading(false);
+          }, 4000);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImageAsset(downloadURL);
+            setIsLoading(false);
+            setFields(true);
+            setMsg("Image uploaded successfully 😊");
+            setAlertStatus("success");
+            setTimeout(() => {
+              setFields(false);
+            }, 4000);
+          });
+        }
+      );
+    };
+    const deleteImage = () => {
+      setIsLoading(true);
+      const deleteRef = ref(storage, imageAsset);
+      deleteObject(deleteRef).then(() => {
+        setImageAsset(null);
+        setIsLoading(false);
+        setFields(true);
+        setMsg("Image deleted successfully 😊");
+        setAlertStatus("success");
+        setTimeout(() => {
+          setFields(false);
+        }, 4000);
+      });
+    };
     const updateuser = async (uid) => {
      
       let userArray = {};
-      if (emailupdate !== "" && passwordupdate !== "" && nameupdate !== "") {
+      if (emailupdate !== "" && passwordupdate !== "" && nameupdate !== "" &&  imageAsset !== "") {
         userArray = {
           email: emailupdate,
           password: passwordupdate,
           name: nameupdate,
+          imageURL: imageAsset,
         };
       }
-      if (emailupdate !== "" && passwordupdate === "" && nameupdate === "") {
+      if (emailupdate !== "" && passwordupdate === "" && nameupdate === "" &&  imageAsset === "") {
         userArray = {
           email: emailupdate,
         };
       }
-      if (emailupdate === "" && passwordupdate !== "" && nameupdate === "") {
+      if (emailupdate === "" && passwordupdate !== "" && nameupdate === "" &&  imageAsset === "") {
         userArray = {
           password: passwordupdate,
         };
       }
-      if (emailupdate === "" && passwordupdate === "" && nameupdate !== "") {
+      if (emailupdate === "" && passwordupdate === "" && nameupdate !== "" &&  imageAsset === "") {
         userArray = {
           name: nameupdate,
         };
       }
-      if (emailupdate === "" && passwordupdate !== "" && nameupdate !== "") {
+      if (emailupdate === "" && passwordupdate === "" && nameupdate === "" &&  imageAsset !== "") {
+        userArray = {
+          imageURL: imageAsset,
+        };
+      }
+      if (emailupdate !== "" && passwordupdate !== "" && nameupdate === "" &&  imageAsset  === "") {
+        userArray = {
+          email: emailupdate,
+          password: passwordupdate,
+        };
+      }
+      if (emailupdate === "" && passwordupdate !== "" && nameupdate !== "" &&  imageAsset  === "") {
         userArray = {
           name: nameupdate,
           password: passwordupdate,
         };
       }
-      if (emailupdate !== "" && passwordupdate === "" && nameupdate !== "") {
+      if (emailupdate === "" && passwordupdate === "" && nameupdate !== "" &&  imageAsset !== "") {
+        userArray = {
+          name: nameupdate,
+          imageURL: imageAsset,
+        };
+      }
+      if (emailupdate !== "" && passwordupdate === "" && nameupdate === "" &&  imageAsset !== "") {
+        userArray = {
+          email: emailupdate,
+          imageURL: imageAsset,
+        };
+      }
+      if (emailupdate !== "" && passwordupdate !== "" && nameupdate !== "" &&  imageAsset === "") {
+        userArray = {
+          email: emailupdate,
+          name: nameupdate,
+          password: passwordupdate,
+        };
+      }
+      if (emailupdate === "" && passwordupdate !== "" && nameupdate !== "" &&  imageAsset !== "") {
+        userArray = {
+          name: nameupdate,
+          password: passwordupdate,
+          imageURL: imageAsset,
+        };
+      }
+      if (emailupdate !== "" && passwordupdate === "" && nameupdate !== "" &&  imageAsset !== "") {
         userArray = {
           name: nameupdate,
           email: emailupdate,
+          imageURL: imageAsset,
         };
       }
-      if (emailupdate !== "" && passwordupdate !== "" && nameupdate === "") {
+      if (emailupdate !== "" && passwordupdate !== "" && nameupdate === "" &&  imageAsset !== "") {
         userArray = {
           password: passwordupdate,
           email: emailupdate,
+          imageURL: imageAsset,
         };
       }
        const updatedocument = doc(firestore, "User", uid);
       await updateDoc(updatedocument, userArray);
-      navigate("/login")
+      clearData();
+      setFields(true);
+      setMsg("updated successfully 😊")
+      setTimeout(() => {
+        setFields(false);
+      }, 4000);
       // window.location.reload(true);
-      console.log("updated",userArray,uid)
+      // console.log("updated",userArray,uid)
+    };
+
+    const clearData = () => {
+      setNameupdate("");
+      setEmailupdate("");
+      setPasswordupdate("");
+      setImageAsset(null);
+     
     };
     const getUser = async () => {
       const getData = await getDocs(addrefUser);
@@ -168,8 +267,11 @@ const EditUser = () => {
             
               <div className="upload group flex justify-center lg:ml-40 md:ml-40 sm:ml-40 items-center flex-col border-2 border-solid  w-44 h-40 cursor-pointer rounded-lg border-[#ea580c]">
          
+              {isLoading ? (
+            <Loader />
+          ) : (
             <>
-              {!user ? (
+              {!imageAsset ? (
                 <>
                   <label className="w-full h-40 flex flex-col items-center justify-center cursor-pointer">
                     <div className="w-full h-full flex flex-col items-center justify-center gap-2">
@@ -182,7 +284,7 @@ const EditUser = () => {
                       type="file"
                       name="uploadimage"
                       accept="image/*"
-                      // onChange={uploadImage}
+                      onChange={uploadImage}
                       className="w-0 h-0"
                     />
                   </label>
@@ -190,17 +292,15 @@ const EditUser = () => {
               ) : (
                 <>
                   <div className="relative h-full">
-
                     <img
-                    src={ user.photoURL || user.imageURL}
-                      // src={imageAsset}
+                      src={imageAsset}
                       alt="uploaded image"
                       className="w-full h-full object-cover"
                     />
                     <button
                       type="button"
                       className="absolute bottom-3 right-3 p-3 rounded-full bg-red-500 text-xl cursor-pointer outline-none hover:shadow-md  duration-500 transition-all ease-in-out"
-                      // onClick={deleteImage}
+                      onClick={deleteImage}
                     >
                       <MdDelete className="text-white" />
                     </button>
@@ -208,6 +308,7 @@ const EditUser = () => {
                 </>
               )}
             </>
+          )}
          
         </div>  
               {/* <InputField
@@ -225,19 +326,19 @@ const EditUser = () => {
             icon={FaEnvelope}
             name="Name"
             type="Name"
-            placeholder={user?.name} 
+            placeholder="Change Name" 
             value={nameupdate}
              changeHandler={e=>setNameupdate(e.target.value)}
           />   
           
-                <InputField
+                {/* <InputField
             icon={FaEnvelope}
             name="email"
             type="email"
             placeholder="Change email"
             value={emailupdate}
              changeHandler={e=>setEmailupdate(e.target.value)}
-          />   
+          />    */}
                 
                 <InputField
             icon={GoEllipsis}
@@ -269,7 +370,7 @@ const EditUser = () => {
                  {userData.map((val,id)=>(
 
                
-                 <button type='submit' onClick={() => updateuser(val.id)}   className='login_signinButton'> Update</button>
+                 <button type='submit' onClick={() => updateuser(val.id)}   className='login_signinButton rounded-1 w-40 mx-40 items-center justify-center'> Update</button>
                   
                   ))}
 
