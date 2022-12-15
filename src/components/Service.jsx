@@ -77,16 +77,16 @@ const Service = () => {
         </div>
       </div>
       <div className='flex flex-row '>
-       <div className='w-[60%] flex flex-row -mr-24  align-middle items-center'>
+       <div className='w-[60%] flex flex-row -mr-24   align-middle items-center'>
      
        <div className='mr-10'>
           <h1 className='text-orange-500 xl:pl-40 lg:pl-64 md:pl-24  text-3xl font-sans font-medium '>Food For Free</h1>
                     <h1 className='text-orange-500 xl:pl-72 lg:pl-96 md:pl-56 text-3xl font-sans font-medium '>24/7</h1>
-       <p className='text-headingColor pl-8 text-lg font-sans'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. </p>
+       <p className='text-headingColor pl-10 text-lg font-sans'>Lorem, ipsum dolor sit amet consect adipisicing elit. </p>
        </div>
         <img src={img5} className="w-44 h-16 z-10 "/>
         </div>
-        <div className='w-[40%] xl:m-10 lg:m-10 md:ml-20 h-[300px] px-20  py-10 bg-orange-100 items-center justify-center '>
+        <div className='w-[40%] xl:m-10 lg:m-20 md:ml-20 h-[300px] px-20  py-10 bg-orange-100 items-center justify-center '>
          <img className='w-56 items-center justify-center xl:pt-5 lg:pt-5 md:pt-10' src={img2} alt="" />
         </div>
       </div>

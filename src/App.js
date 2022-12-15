@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { CreateContainer, Header, MainContainer, MenuContainer,HomeContainer } from "./components";
+import EditUser from "./components/EditUser";
 import { useStateValue } from "./context/StateProvider";
 import { getAllFoodItems } from "./utils/firebaseFunctions";
 import { actionType } from "./context/reducer";
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="/*" element={<HomeContainer />} />
             <Route path="/CreateItem" element={<CreateContainer />} />
             <Route path="/createcategory" element={<CreateCategory />} />
+            <Route path="/edituser" element={<EditUser/>} />
             <Route path="/menu" element={<Menu/>}/>
             <Route path="/service" element={<Service/>}/>
             <Route path="/hotmenu" element={<MenuContainer/>} />
