@@ -45,7 +45,7 @@ const Login = () => {
       );
     
       setgetuser(user.docs.map((doc) => doc.data()));
-      console.log(getuser)
+      // console.log(getuser)
     };
 
     const getUser = async () => {
@@ -54,7 +54,7 @@ const Login = () => {
         setgetemailuser(getuser)
       }
      })
-     console.log(getemailuser)
+    //  console.log(getemailuser)
     }
     };
     const login1 = async () => {
@@ -80,9 +80,9 @@ const Login = () => {
     const getemail= [];
     const signIn = (e) => {
       var data = getuser?.filter(val => val.email === email)
-      console.log(data); 
+      // console.log(data); 
       getemail.push(data[0])
-      console.log(getemail); 
+      // console.log(getemail); 
       {getuser.map((val,ind) => {
         if (
           email === val.email &&
@@ -90,14 +90,14 @@ const Login = () => {
          
         ) 
         {
-          console.log("true")
+          // console.log("true")
           dispatch({
             type: actionType.SET_USER,
             user: getemail[0],
           });
           login("user");
            localStorage.setItem("user",JSON.stringify( getemail[0]));
-          console.log(getemail[0]);
+          // console.log(getemail[0]);
           navigate("/*", { replace: true });
           // setErr(false);
           // console.log("login")
@@ -162,11 +162,11 @@ const Login = () => {
           />
                 {/* <span className="forgot-password">Forget Pasword?</span> */}
                 </div>
-                <button type='submit'  onClick={signIn} className='login_signinButton'>Sign In</button>
+                <button type='submit'  onClick={signIn} className='login_signinButton w-56 xl:ml-36 lg:ml-32'>Sign In</button>
            
             <p className="paraLine">Don't have an account yet, click to create your account</p>
             <Link to="/signup">
-            <button type='submit' className='login_registerButton'>Create Your Account</button>
+            <button type='submit' className='login_registerButton w-56 xl:ml-36 lg:ml-32 '>Create Your Account</button>
 </Link>
         </div>
     </div>

@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import "../styles/Login.css"
+import "../styles/dark.css"
 import "../styles/headline.css"
 import "../styles/inputField.css"
 import { motion } from "framer-motion";
@@ -22,6 +23,7 @@ import { NavLink , useNavigate} from "react-router-dom";
 import img1 from '../img/logo.png'
 import { FaFile,FaTextWidth,FaLaptopCode } from "react-icons/fa";
 import { FaEnvelope } from "react-icons/fa";
+import { MdDarkMode } from "react-icons/md";
 import { GoEllipsis } from "react-icons/go";
 import { IoIosEyeOff } from "react-icons/io";
 import { storage } from "../firebase.config";
@@ -226,14 +228,34 @@ const EditUser = () => {
     useEffect(() => {
       getUser();
     }, []);
+
+
+    const [darkMode, setDarkMode] = React.useState(false);
+
+    React.useEffect(() => {
+      const json = localStorage.getItem("site-dark-mode");
+      const currentMode = JSON.parse(json);
+      if (currentMode) {
+        setDarkMode(true);
+      } else {
+        setDarkMode(false);
+      }
+    }, []);
+  
+    React.useEffect(() => {
+      if (darkMode) {
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.remove("dark");
+      }
+      const json = JSON.stringify(darkMode);
+      localStorage.setItem("site-dark-mode", json);
+    }, [darkMode]);
   return (
-    <div className="w-full min-h-screen flex items-center justify-center">
-      <div className=''>
-     {/* <div className="container">
-       
-        <img src={img1} alt="" className='login-logo' />
+    <div className="w-full h-screen  flex justify-center login">
+
+      <div className='' >
      
-     </div> */}
      <div>
      <div className="headline" >
       {/* <div className="center-container">
@@ -265,7 +287,7 @@ const EditUser = () => {
             
               <div>
             
-              <div className="upload group flex justify-center lg:ml-40 md:ml-40 sm:ml-40 items-center flex-col border-2 border-solid  w-44 h-40 cursor-pointer rounded-lg border-[#ea580c]">
+              <div className="upload group flex justify-center lg:ml-40 md:ml-40 sm:ml-40 items-center flex-col border-2 border-solid  w-44 h-40 cursor-pointer rounded-lg border-[#ea580c] uploadimg">
          
               {isLoading ? (
             <Loader />
@@ -370,7 +392,7 @@ const EditUser = () => {
                  {userData.map((val,id)=>(
 
                
-                 <button type='submit' onClick={() => updateuser(val.id)}   className='login_signinButton rounded-1 w-40 mx-40 items-center justify-center'> Update</button>
+                 <button type='submit' onClick={() => updateuser(val.id)}   className='login_signinButton w-56 xl:ml-36 lg:ml-32'> Update</button>
                   
                   ))}
 

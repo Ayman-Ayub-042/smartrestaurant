@@ -70,17 +70,17 @@ const RowContainer = ({ flag, data, scrollValue }) => {
         data.map((item) => (
           <div
             key={item?.id}
-            className="w-275 h-[175px] min-w-[275px] md:w-300 md:min-w-[300px]  bg-cardOverlay rounded-lg py-2 px-4  my-12 backdrop-blur-lg hover:drop-shadow-lg flex flex-col items-center justify-evenly relative"
+            className="w-275 h-[175px] min-w-[275px] md:w-300 md:min-w-[300px] motion  bg-cardOverlay rounded-lg py-2 px-4  my-12 backdrop-blur-lg hover:drop-shadow-lg flex flex-col items-center justify-evenly relative"
           >
-            <div className="w-full flex items-center justify-between">
+            <div className="w-full flex items-center justify-between motion">
               <motion.div
-                className="w-40 h-40 -mt-8 drop-shadow-2xl"
+                className="w-40 h-40 -mt-8 drop-shadow-2xl cartmain  "
                 whileHover={{ scale: 1.2 }}
               >
                 <img
                   src={item?.imageURL}
                   alt=""
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain "
                 />
               </motion.div>
               {/* <motion.div
@@ -108,7 +108,7 @@ const RowContainer = ({ flag, data, scrollValue }) => {
            </motion.div>)}
             </div>
 
-            <div className="w-full flex flex-col items-end justify-end -mt-8">
+            <div className="w-full flex flex-col items-end justify-end -mt-8 motion">
               <p className="text-textColor font-semibold text-base md:text-lg">
                 {item?.title}
               </p>

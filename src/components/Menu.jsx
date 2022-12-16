@@ -62,9 +62,9 @@ const Menu = () => {
       
       }, []);
   return (
-    <div className=' h-full'>
+    <div className=' h-full bg-primary px-12'>
 
-<div class=" w-full md:w-full sm:w-full bg-primary  align-middle justify-center flex flex-row  items-center my-4  drop-shadow-xl">
+<div class=" w-full md:w-full sm:w-full bg-primary  align-middle justify-center flex flex-row  items-center py-4  drop-shadow-xl">
 <Button disabled={counter===1}>
 <IoIosArrowBack className="text-orange-500 font-semibold w-10 h-10" onClick={previousButton}  /></Button>
 {currentPosts && currentPosts?.length > 0 ? (

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { MdShoppingBasket, MdAdd, MdLogout ,MdSettings} from "react-icons/md";
+import { MdShoppingBasket, MdAdd, MdLogout ,MdSettings,MdDarkMode} from "react-icons/md";
 import { motion } from "framer-motion";
-
+import "../styles/dark.css"
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { app } from "../firebase.config";
 import { useNavigate } from "react-router-dom";
@@ -61,8 +61,29 @@ const Header = () => {
     });
   };
 
+  const [darkMode, setDarkMode] = React.useState(false);
+
+  React.useEffect(() => {
+    const json = localStorage.getItem("site-dark-mode");
+    const currentMode = JSON.parse(json);
+    if (currentMode) {
+      setDarkMode(true);
+    } else {
+      setDarkMode(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+    const json = JSON.stringify(darkMode);
+    localStorage.setItem("site-dark-mode", json);
+  }, [darkMode]);
   return (
-    <header className="fixed z-50 w-screen p-3 px-4 md:p-6 md:px-16 bg-primary">
+    <header className="fixed z-50 w-screen p-3 px-4 md:p-6 md:px-16 bg-primary dark:bg-black">
       {/* desktop & tablet */}
       <div className="hidden md:flex w-full h-full items-center justify-between">
         <Link to={"/"} className="flex items-center gap-2">
@@ -77,9 +98,11 @@ const Header = () => {
             exit={{ opacity: 0, x: 200 }}
             className="flex items-center gap-24 "
           >
+          <Link to={"/home"}>
             <li className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
               Home
             </li>
+            </Link>
             <Link to={"/menu"}>
             <li className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
               Menu
@@ -99,7 +122,7 @@ const Header = () => {
             className="relative flex items-center justify-center"
             onClick={showCart}
           >
-            <MdShoppingBasket className="text-textColor text-2xl  cursor-pointer" />
+            <MdShoppingBasket className="text-textColor text-2xl  cursor-pointer cart" />
             {cartItems && cartItems.length > 0 && (
               <div className=" absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center">
                 <p className="text-xs text-white font-semibold">
@@ -107,6 +130,13 @@ const Header = () => {
                 </p>
               </div>
             )}
+          </div>
+          <div
+            className="relative flex items-center justify-center"
+            onClick={() => setDarkMode(!darkMode)}
+          >
+             <MdDarkMode className="text-textColor text-2xl  cursor-pointer cart" />
+          
           </div>
 
           <div className="relative">

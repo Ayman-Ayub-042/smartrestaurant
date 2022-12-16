@@ -60,7 +60,7 @@ const MenuItems = ({ flag, data, scrollValue }) => {
   return (
     <div
       ref={rowContainer}
-      className={`w-full flex items-center gap-3  my-12 scroll-smooth  ${
+      className={`w-full flex items-center gap-3   my-12 scroll-smooth  ${
         flag
           ? "overflow-x-scroll scrollbar-none"
           : "overflow-x-hidden flex-wrap justify-center"
@@ -70,11 +70,11 @@ const MenuItems = ({ flag, data, scrollValue }) => {
         data.map((item) => (
           <div
             key={item?.id}
-            className="w-375 h-[475px] min-w-[475px] md:w-300 md:min-w-[300px]  bg-cardOverlay rounded-lg py-2 px-4  my-12 backdrop-blur-lg  hover:border-orange-500 hover:border-2 flex flex-col items-center justify-evenly relative"
+            className="w-375 h-[475px] min-w-[475px] motion md:w-300 md:min-w-[300px]  bg-cardOverlay rounded-lg py-2 px-4  my-12 backdrop-blur-lg  hover:border-orange-500 hover:border-2 flex flex-col items-center justify-evenly relative"
           >
-            <div className="w-full mt-8 flex items-center justify-between">
+            <div className="w-full mt-8 motion flex items-center justify-between">
               <motion.div
-                className="w-80 h-44  -mt-12 drop-shadow-xl"
+                className="w-80 h-44 motion -mt-12 drop-shadow-xl"
                 whileHover={{ scale: 1.1 }}
               >
                 <img
@@ -95,7 +95,7 @@ const MenuItems = ({ flag, data, scrollValue }) => {
              
            
 
-            <div className="w-full flex flex-col items-center justify-center -mt-8">
+            <div className="w-full flex flex-col motion items-center justify-center -mt-8">
               <p className="text-textColor font-semibold text-xl md:text-xl">
                 {item?.title}
               </p>
@@ -110,10 +110,10 @@ const MenuItems = ({ flag, data, scrollValue }) => {
               </div>
               <motion.div
                 whileTap={{ scale: 0.75 }}
-                className=" rounded-full mt-4 bg-red-600 px-4 py-3 flex gap-3 items-center justify-center cursor-pointer hover:shadow-md  "
+                className=" rounded-full mt-4 motion2 bg-red-600 px-4 py-3 flex gap-3 items-center justify-center cursor-pointer hover:shadow-md  "
                 onClick={() => setItems([...cartItems, item])}
               >
-              <p className="text-lg text-white font-normal">Add to cart</p>
+              <p className="text-lg  text-white font-normal">Add to cart</p>
                 <MdShoppingBasket className="text-white" />
               </motion.div>
             </div>

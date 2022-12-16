@@ -69,7 +69,7 @@ function Signup() {
       );
     
       setgetuser(user.docs.map((doc) => doc.data()));
-    console.log(getuser)
+    // console.log(getuser)
     // {getuser?.filter((val,ind)=>{
     //   var data = getuser?.filter(val => val.email === email)
     // console.log(data); 
@@ -82,7 +82,7 @@ function Signup() {
     const getAllemail = async () => {
       {getuser?.map((val,ind)=>{
          setgetemail(val.email)
-         console.log(getemail)
+        //  console.log(getemail)
       })}
      
     }
@@ -139,9 +139,9 @@ function Signup() {
     const saveDetails = () => {
       setIsLoading(true);
       var data = getuser?.filter(val => val.email === email)
-      console.log(data); 
+      // console.log(data); 
       getemails.push(data[0]?.email)
-      console.log(getemails); 
+      // console.log(getemails); 
       if(getemails[0] === email){
         setMsg("Email Already Exist");
         alert("user already exist")
@@ -179,7 +179,7 @@ function Signup() {
           navigate('/login')
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         setFields(true);
         setMsg("Error while uploading : Try AGain 🙇");
         setAlertStatus("danger");
@@ -350,10 +350,11 @@ function Signup() {
             />
                 
                 </div>
-                <button type='submit'  onClick={saveDetails} className='login_signinButton rounded-1 w-40 mx-40 items-center justify-center'>Create Account</button>
+                <div className='flex flex-col'>
+                <button type='submit'  onClick={saveDetails} className='login_signinButton w-56 xl:ml-36 lg:ml-32'>Create Account</button>
                 <Link to="/login">
-            <button type='submit' className='login_registerButton'>Go To SignIn Page</button>
-</Link>
+            <button type='submit' className='login_registerButton w-56 xl:ml-36 lg:ml-32'>Go To SignIn Page</button>
+</Link></div>
             </form>
            
         </div>
