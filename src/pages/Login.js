@@ -8,6 +8,7 @@ import { useStateValue } from "../context/StateProvider";
 import { actionType } from "../context/reducer";
 import { NavLink , useNavigate} from "react-router-dom";
 import img from '../img/logo.png'
+import bcrypt from 'bcryptjs'
 import { FaEnvelope } from "react-icons/fa";
 import { GoEllipsis } from "react-icons/go";
 import { IoIosEyeOff } from "react-icons/io";
@@ -76,7 +77,7 @@ const Login = () => {
         // navigate("/*", { replace: true });
       }
     };
-  
+    const hashedPassword = bcrypt.hashSync(password, '$2a$10$CwTycUXWue0Thq9StjUM0u')
     const getemail= [];
     const signIn = (e) => {
       var data = getuser?.filter(val => val.email === email)
@@ -86,7 +87,7 @@ const Login = () => {
       {getuser.map((val,ind) => {
         if (
           email === val.email &&
-          password === val.password
+          hashedPassword === val.password
          
         ) 
         {

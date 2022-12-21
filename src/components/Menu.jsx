@@ -15,11 +15,15 @@ import { IoSearchOutline, IoInformationCircleOutline } from "react-icons/io5";
 import RowContainer from './RowContainer';
 import MenuItems from './MenuItems';
 import Button from "@material-ui/core/Button";
+import BouncingLoader from './BouncingLoader';
+import CartContainer from './CartContainer';
+import { useStateValue } from "../context/StateProvider";
 const Menu = () => {
+  const [{  user,freshfoodItems, cartShow }, dispatch] = useStateValue();
     const [search, setsearch] = useState("");
     const [fooditems,setfooditems] = useState()
     const [filter, setFilter] = useState("");
-    
+    const [isLoading, setIsLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostPerPage] = useState(7);
     const [food,setfood] = useState()
@@ -29,11 +33,13 @@ const Menu = () => {
     const currentPosts = food?.slice(indexOfFirstPost, indexOfLastPost);
     const paginate = pageNumber => setCurrentPage(pageNumber);
     const getAllFoodItems = async () => {
+      setIsLoading(true)
         const items = await getDocs(
           query(collection(firestore, "foodItems"), orderBy("category", "desc"))
         );
       
         setfooditems(items.docs.map((doc) => doc.data()));
+        setIsLoading(false)
       };
     const getAllCategories = async () => {
         const items = await getDocs(
@@ -60,13 +66,17 @@ const Menu = () => {
         getAllCategories()
         getAllFoodItems()
       
-      }, []);
+      },  [cartShow]);
   return (
+    <div className=' h-full bg-primary '>
+    {isLoading ? <BouncingLoader /> :
     <div className=' h-full bg-primary px-12'>
 
 <div class=" w-full md:w-full sm:w-full bg-primary  align-middle justify-center flex flex-row  items-center py-4  drop-shadow-xl">
 <Button disabled={counter===1}>
 <IoIosArrowBack className="text-orange-500 font-semibold w-10 h-10" onClick={previousButton}  /></Button>
+
+
 {currentPosts && currentPosts?.length > 0 ? (
             currentPosts.map((category) => (
              <button
@@ -111,6 +121,9 @@ const Menu = () => {
           />
 </div>
            
+    </div>
+    }
+    {cartShow && <CartContainer />}
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-
+import ImageUploading from 'react-images-uploading';
 import {
   MdFastfood,
   MdCloudUpload,
@@ -11,6 +11,8 @@ import {
 import {
   collection,
   doc,
+  FieldPath,
+  FieldValue,
   getDocs,
   orderBy,
   query,
@@ -24,13 +26,28 @@ import {
   getDownloadURL,
   ref,
   uploadBytesResumable,
+ 
 } from "firebase/storage";
 import { storage } from "../firebase.config";
 import { getAllFoodItems, saveItem,savefreshItem,getAllfreshFoodItems } from "../utils/firebaseFunctions";
 import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
+import { stringify } from "postcss";
 
 const CreateContainer = () => {
+ 
+  const [images, setImages] = useState([]);
+//   const img=Object.values(images);
+// //  {images?.map((val,ind)=>{
+// // img.push(val)
+// //  })}
+//  console.log(img,images)
+  const maxNumber = 3;//maximum image upload
+  const onChange = (imageList) => {
+    setImages(imageList);
+  };
+
+
   const [title, setTitle] = useState("");
   const [qty, setqty] = useState("");
   const [calories, setCalories] = useState("");
@@ -117,7 +134,7 @@ const getAllFreshCategories = async () => {
   const saveDetails = () => {
     setIsLoading(true);
     try {
-      if (!title || !qty || !imageAsset || !price || !category) {
+      if (!title || !qty  || !price || !category) {
         setFields(true);
         setMsg("Required fields can't be empty");
         setAlertStatus("danger");
@@ -129,7 +146,7 @@ const getAllFreshCategories = async () => {
         const data = {
           id: `${Date.now()}`,
           title: title,
-          imageURL: imageAsset,
+          imageURL:  [...images],
           category: category,
           // calories: calories,
           qty: qty,
@@ -207,6 +224,7 @@ const getAllFreshCategories = async () => {
   const clearData = () => {
     setTitle("");
     setImageAsset(null);
+    setImages(null)
     setCalories("");
     setPrice("");
     setCategory("Select Category");
@@ -308,8 +326,46 @@ const getAllFreshCategories = async () => {
               ))}
           </select>
         </div>
-
-        <div className="group flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full h-225 md:h-340 cursor-pointer rounded-lg">
+        <ImageUploading
+        multiple //multiple image upload
+        value={images}
+        onChange={onChange}
+        maxNumber={maxNumber}
+        dataURLKey="data_url"
+      >
+        {({
+          imageList,
+          onImageUpload,
+          onImageRemoveAll,
+          onImageUpdate,
+          onImageRemove,
+          isDragging,
+          dragProps,
+        }) => (
+          
+          <div className="flex flex-col">
+            <button
+              style={isDragging ? { color: 'red' } : undefined}
+              onClick={onImageUpload}
+              {...dragProps}
+            >
+              Upload Image 
+            </button>
+            &nbsp;
+            <button onClick={onImageRemoveAll}>Remove all images</button>
+            {imageList.map((image, index) => (
+              <div key={index} className="image-item flex flex-row ">
+                <img src={image['data_url']} alt="" width="100" />
+                <div className="image-item__btn-wrapper">
+                  <button onClick={() => onImageUpdate(index)}>Update</button>
+                  <button onClick={() => onImageRemove(index)}>Remove</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </ImageUploading>
+        {/* <div className="group flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full h-225 md:h-340 cursor-pointer rounded-lg">
           {isLoading ? (
             <Loader />
           ) : (
@@ -352,7 +408,7 @@ const getAllFreshCategories = async () => {
               )}
             </>
           )}
-        </div>
+        </div> */}
 
         <div className="w-full flex flex-col md:flex-row items-center gap-3">
           <div className="w-full py-2 border-b border-gray-300 flex items-center gap-2">

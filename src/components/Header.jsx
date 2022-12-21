@@ -98,7 +98,7 @@ const Header = () => {
             exit={{ opacity: 0, x: 200 }}
             className="flex items-center gap-24 "
           >
-          <Link to={"/home"}>
+          <Link to={"/*"}>
             <li className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
               Home
             </li>
@@ -108,9 +108,11 @@ const Header = () => {
               Menu
             </li>
             </Link>
+            <Link to={"/aboutus"}>
             <li className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
               About Us
             </li>
+            </Link>
             <Link to={"/service"}>
             <li className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
               Service

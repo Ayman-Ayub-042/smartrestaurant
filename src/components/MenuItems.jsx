@@ -17,11 +17,15 @@ import {
     updateDoc,
     deleteDoc,
   } from "firebase/firestore";
+  import { Link, Navigate } from "react-router-dom";
   import { firestore } from "../firebase.config";
+import { useNavigate} from "react-router-dom";
+import Detail from "./Detail";
 const MenuItems = ({ flag, data, scrollValue }) => {
+  const navigate = useNavigate();
     const rowContainer = useRef();
   const [title,settitle] = useState()
-  const [id,setid]=useState()
+  const [idd,setid]=useState()
   const [items, setItems] = useState([]);
   const [isMenu, setIsMenu] = useState(false);
   const [{ cartItems,user }, dispatch] = useStateValue();
@@ -41,14 +45,13 @@ const MenuItems = ({ flag, data, scrollValue }) => {
     });
     localStorage.setItem("cartItems", JSON.stringify(items));
   };
-  const login1 = async (title,id) => {
-    if (user && user.email === "admin@gmail.com") {
-      settitle(title)
+  const detail = async (id) => {
+    
+    
       setid(id)
-         setIsMenu(!isMenu);
-       } else {
-     
-    }
+        console.log(idd)
+        
+       
   };
   useEffect(() => {
     rowContainer.current.scrollLeft += scrollValue;
@@ -69,9 +72,11 @@ const MenuItems = ({ flag, data, scrollValue }) => {
       {data && data.length > 0 ? (
         data.map((item) => (
           <div
+          // onClick={() => detail(item?.id)}
             key={item?.id}
             className="w-375 h-[475px] min-w-[475px] motion md:w-300 md:min-w-[300px]  bg-cardOverlay rounded-lg py-2 px-4  my-12 backdrop-blur-lg  hover:border-orange-500 hover:border-2 flex flex-col items-center justify-evenly relative"
           >
+          
             <div className="w-full mt-8 motion flex items-center justify-between">
               <motion.div
                 className="w-80 h-44 motion -mt-12 drop-shadow-xl"
@@ -92,10 +97,11 @@ const MenuItems = ({ flag, data, scrollValue }) => {
               </motion.div> */}
               </div>
              
+           
              
            
-
-            <div className="w-full flex flex-col motion items-center justify-center -mt-8">
+              <Link  to={`/detail/${item?.category}/${item?.id}`}>
+            <div  className="w-full flex flex-col motion items-center justify-center -mt-8">
               <p className="text-textColor font-semibold text-xl md:text-xl">
                 {item?.title}
               </p>
@@ -117,6 +123,7 @@ const MenuItems = ({ flag, data, scrollValue }) => {
                 <MdShoppingBasket className="text-white" />
               </motion.div>
             </div>
+            </Link>
           </div>
         ))
       ) : (

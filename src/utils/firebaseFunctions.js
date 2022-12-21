@@ -7,7 +7,12 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { firestore } from "../firebase.config";
-
+// Saving new Review
+export const saveReview = async (reviewdata) => {
+  await setDoc(doc(firestore, "Review", `${Date.now()}`), reviewdata, {
+    merge: true,
+  });
+};
 // Saving new Item
 export const saveUser = async (userdata) => {
   await setDoc(doc(firestore, "User", `${Date.now()}`), userdata, {

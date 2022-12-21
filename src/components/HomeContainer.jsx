@@ -7,10 +7,10 @@ import MenuContainer from "./MenuContainer";
 
 const HomeContainer = () => {
   return (
-    <div className="w-full h-auto flex px-4 md:px-16 flex-col items-center justify-center bg-primary">
+    <div className="w-full h-auto flex  flex-col items-center justify-center bg-primary">
      
     <section
-      className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full "
+      className="grid grid-cols-1 md:grid-cols-2 px-4 md:px-16 gap-2 w-full "
       id="home"
     >
       <div className="py-2 flex-1 flex flex-col items-start justify-center gap-6">

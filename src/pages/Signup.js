@@ -12,7 +12,7 @@ import {
   MdFoodBank,
   MdAttachMoney,
 } from "react-icons/md";
-
+import bcrypt from 'bcryptjs'
 import Loader from "../components/Loader";
 import { app } from "../firebase.config";
 import { Link, Navigate } from "react-router-dom";
@@ -48,6 +48,7 @@ import InputField from '../components/InputField';
 import { useEffect } from 'react';
 import { stringify } from 'postcss';
 function Signup() {
+  const salt = bcrypt.genSaltSync(10)
   const [imageAsset, setImageAsset] = useState(null);
   const [fields, setFields] = useState(false);
   const [alertStatus, setAlertStatus] = useState("danger");
@@ -62,7 +63,7 @@ function Signup() {
    const [err, setErr] = useState(false);
     const [password, setPassword] = useState('');
     const getemails= [];
-   
+    const hashedPassword = bcrypt.hashSync(password, '$2a$10$CwTycUXWue0Thq9StjUM0u')
     const getAllUser = async () => {
       const user = await getDocs(
         collection(firestore, "User")
@@ -136,6 +137,7 @@ function Signup() {
         }, 4000);
       });
     };
+    
     const saveDetails = () => {
       setIsLoading(true);
       var data = getuser?.filter(val => val.email === email)
@@ -158,13 +160,14 @@ function Signup() {
             setIsLoading(false);
           }, 4000);
         } else {
-          
+  
+
           const userdata = {
             id: `${Date.now()}`,
             name: name,
             imageURL: imageAsset,
             email:email,
-            password:password,
+            password:hashedPassword,
            
           };
           saveUser(userdata);

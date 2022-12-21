@@ -25,6 +25,10 @@
 .dark li {
     color: rgb(219, 213, 213);
   }
+
+  .dark li:hover{
+    color: rgb(177, 173, 173);
+  }
   .dark .motion {
     background-color: rgb(219, 213, 213);
     color:rgb(68, 66, 66); 

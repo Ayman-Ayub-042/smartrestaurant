@@ -11,6 +11,8 @@ import { MdShoppingBasket, MdAdd, MdLogout } from "react-icons/md";
 import { useQuery } from "react-query";
 import { getAllCategories, saveCategory,getAllFreshCategories,saveFreshCategory } from "../utils/firebaseFunctions";
 import Footer from "./Footer"
+import Loader from './Loader';
+import BouncingLoader from "./BouncingLoader"
 import {
   collection,
   doc,
@@ -21,12 +23,14 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { firestore } from "../firebase.config";
-const MainContainer = () => {
+
+import BarsLoader from 'react-loaders-kit/lib/bars/BarsLoader';
+const MainContainer = ({loading}) => {
   const [{  user,freshfoodItems, cartShow }, dispatch] = useStateValue();
   const [scrollValue, setScrollValue] = useState(0);
   const [filter, setFilter] = useState("fruit");
   const [{foodfreshCategory}] = useStateValue();
- 
+  const [isLoading, setIsLoading] = useState(false);
 const [freshfood,setfreshfood] = useState()
 const [freshfooditems,setfreshfooditems] = useState()
 const [isMenu, setIsMenu] = useState(false);
@@ -35,12 +39,14 @@ const [title,settitle] = useState()
 const [id,setid]=useState()
 
 const getAllFreshCategories = async () => {
+  setIsLoading(true);
   const items = await getDocs(
     query(collection(firestore, "freshfoodCategory"))
   );
 
   setfreshfood(items.docs.map((doc) => doc.data()));
   console.log(items)
+  setIsLoading(false);
 };
 const deletefreshcategory = async (id) => {
   await deleteDoc(
@@ -52,11 +58,13 @@ const deletefreshcategory = async (id) => {
   
 };
 const getAllfreshFoodItems = async () => {
+  setIsLoading(true);
   const items = await getDocs(
     query(collection(firestore, "freshfoodItems"), orderBy("id", "desc"))
   );
 
   setfreshfooditems(items.docs.map((doc) => doc.data()));
+  setIsLoading(false);
 };
 
 const deletefreshitem = async (id) => {
@@ -97,6 +105,13 @@ const deletefreshitem = async (id) => {
       setIsMenu(!isMenu);
     
   };
+  const loaderProps = {
+    isLoading,
+    size: 35,
+    duration: 1,
+    colors: ['#5e22f0', '#f6b93b']
+}
+
   useEffect(() => {
     getAllFreshCategories()
     getAllfreshFoodItems()
@@ -106,10 +121,10 @@ const deletefreshitem = async (id) => {
   return (
     <div className="w-full h-auto flex flex-col items-center justify-center ">
       
-
-      <section className="w-full my-6">
+      {isLoading ? <BouncingLoader  /> : 
+      <section className="w-full my-6 px-4 md:px-16">
         <div className="w-full flex flex-col items-center justify-center">
-          <p className="text-2xl font-semibold capitalize text-headingColor relative before:absolute before:rounded-lg before:content before:w-16 before:h-1 before:-bottom-2 before:left-0 before:bg-gradient-to-tr from-orange-400 to-orange-600 transition-all ease-in-out duration-100 mr-auto">
+          <p className="text-2xl font-semibold  capitalize text-headingColor relative before:absolute before:rounded-lg before:content before:w-16 before:h-1 before:-bottom-2 before:left-0 before:bg-gradient-to-tr from-orange-400 to-orange-600 transition-all ease-in-out duration-100 mr-auto">
             Our fresh & healthy fruits
           </p>
 
@@ -129,11 +144,12 @@ const deletefreshitem = async (id) => {
               <MdChevronRight className="text-lg text-white" />
             </motion.div>
           </div> */}
-       
+        
+         
         <div className="w-full flex items-center justify-start lg:justify-center gap-8 py-6 overflow-x-scroll scrollbar-none">
-         
-         
-        {currentPosts && currentPosts?.length > 0 ? (
+       
+      
+       { currentPosts && currentPosts?.length > 0 ? (
             currentPosts.map((category) => (
               <motion.div
                 whileTap={{ scale: 0.75 }}
@@ -176,14 +192,17 @@ const deletefreshitem = async (id) => {
           <p className="text-xl text-headingColor font-semibold my-2">
             Items Not Available
           </p>
+         
         </div>
-      )}
+      )
+       }
             {/* <RowContainer1
             flag={false}
             data={foodCategory}
           /> */}
 
         </div>
+       
         {isMenu && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.6 }}
@@ -227,9 +246,11 @@ const deletefreshitem = async (id) => {
            
          />
        </div>
+          
        </div>
        
       </section>
+      }
 
       
 

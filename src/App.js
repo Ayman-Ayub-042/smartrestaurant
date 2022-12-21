@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Link, Route, Routes,useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { CreateContainer, Header, MainContainer, MenuContainer,HomeContainer } from "./components";
 import EditUser from "./components/EditUser";
@@ -7,15 +7,123 @@ import { useStateValue } from "./context/StateProvider";
 import { getAllFoodItems } from "./utils/firebaseFunctions";
 import { actionType } from "./context/reducer";
 import CreateCategory from "./components/CreateCategory";
+import avatar from "./img/avatar.png"
 import Login from "./pages/Login";
 import Menu from "./components/Menu";
 import Service from "./components/Service";
 import Home from "./components/Home";
+import ChatBot from 'react-simple-chatbot';
+import { ThemeProvider } from 'styled-components';
+import Detail from "./components/Detail";
+import Index from "./components/Aboutus/Index";
+import Review from "./components/Review";
+import Loader from 'react-loader-bubble'
 
-
-const App = () => {
+const App = ({loading}) => {
   const [{ foodItems }, dispatch] = useStateValue();
+  const navigate = useNavigate();
+  const hotmenu =()=> {
+    
+    navigate("/hotmenu");
+  }
+  const freshmenu =()=> {
+    
+    navigate("/mainmenu");
+  }
+  const steps = [
+    {
+        id: '0',
+        message: 'Greetings!',
+ 
+        // This calls the next id
+        // i.e. id 1 in this case
+        trigger: '1',
+    }, {
+        id: '1',
+ 
+        // This message appears in
+        // the bot chat bubble
+        message: 'Please write your username',
+        trigger: '2'
+    }, {
+        id: '2',
+ 
+        // Here we want the user
+        // to enter input
+        user: true,
+        trigger: '3',
+    }, {
+        id: '3',
+        message: " hi {previousValue}, Please Select Item?",
+        trigger: 4
+    }, {
+        id: '4',
+        options: [
+             
+            // When we need to show a number of
+            // options to choose we create alist
+            // like this
+            { value: 1, label: 'View Hot Deals',trigger:5},
+            { value: 2, label: 'View Fresh Fruits',trigger:6 },
+ 
+        ],
+        // end: true
+    },
+    {
+      id: '5',
+     
+      // to: '/hotmenu',
+      message: hotmenu,
+      trigger: 7
+  },
+  {
+    id: '6',
+   
+    // to: '/hotmenu',
+    message: freshmenu,
+    trigger: 7
+    // trigger: 7
+},
+{
+  id: '7',
+ 
+  // to: '/hotmenu',
+  message: "Please Select ",
+  trigger: 8
+  // trigger: 7
+},
+{
+  id: '8',
+  options: [
+       
+      // When we need to show a number of
+      // options to choose we create alist
+      // like this
+      { value: 1, label: 'View Items',trigger:3},
+      { value: 2, label: 'Talk to Admin', },
 
+  ],
+  // end: true
+},
+];
+ 
+// Creating our own theme
+const theme = {
+    background: '#ffedd5',
+    headerBgColor: '#ea580c',
+    headerFontSize: '20px',
+    botBubbleColor: '#ea580c',
+    headerFontColor: 'white',
+    botFontColor: 'white',
+    userBubbleColor: '#ffa936',
+    userFontColor: 'white',
+};
+ 
+// Set some properties of the bot
+const config = {
+    botAvatar: avatar,
+    floating: true,
+};
   const fetchData = async () => {
     await getAllFoodItems().then((data) => {
       dispatch({
@@ -31,6 +139,7 @@ const App = () => {
 
   return (
     <AnimatePresence exitBeforeEnter>
+     
       <div className="w-screen h-auto flex flex-col ">
         <Header />
 
@@ -44,11 +153,28 @@ const App = () => {
             <Route path="/menu" element={<Menu/>}/>
             <Route path="/home" element={<Home/>}/>
             <Route path="/service" element={<Service/>}/>
+           
             <Route path="/hotmenu" element={<MenuContainer/>} />
+          
             <Route path="/mainmenu" element={<MainContainer/>} />
+            <Route path="/aboutus" element={<Index/>} />
+            <Route path="/review" element={<Review/>} />
+            <Route path="/detail/:category/:id" element={<Detail />} />
           </Routes>
+          <ThemeProvider theme={theme}>
+                <ChatBot
+ 
+                    // This appears as the header
+                    // text for the chat bot
+                    headerTitle="ChatBot"
+                    steps={steps}
+                    {...config}
+ 
+                />
+            </ThemeProvider>
         </main>
       </div>
+    
     </AnimatePresence>
   );
 };
