@@ -37,15 +37,59 @@ import { stringify } from "postcss";
 const CreateContainer = () => {
  
   const [images, setImages] = useState([]);
-//   const img=Object.values(images);
-// //  {images?.map((val,ind)=>{
-// // img.push(val)
-// //  })}
-//  console.log(img,images)
+  const [urls, setUrls] = useState([]);
+  const [progress, setProgress] = useState(0);
+  
   const maxNumber = 3;//maximum image upload
   const onChange = (imageList) => {
     setImages(imageList);
   };
+
+  const handleChange = (e) => {
+    for (let i = 0; i < e.target.files.length; i++) {
+      const newImage = e.target.files[i];
+      newImage["id"] = Math.random();
+      setImages((prevState) => [...prevState, newImage]);
+    }
+
+   
+  };
+
+  const handleUpload = () => {
+    const promises = [];
+    images.map((image) => {
+      const uploadTask = storage.ref(`images/${image.name}`).put(image);
+      promises.push(uploadTask);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setProgress(progress);
+        },
+        (error) => {
+          console.log(error);
+        },
+        async () => {
+          await storage
+            .ref("images")
+            .child(image.name)
+            .getDownloadURL()
+            .then((urls) => {
+              setUrls((prevState) => [...prevState, urls]);
+            });
+        }
+      );
+    });
+
+    Promise.all(promises)
+      .then(() => alert("All images uploaded"))
+      .catch((err) => console.log(err));
+  };
+
+  console.log("images: ", images);
+  console.log("urls", urls);
 
 
   const [title, setTitle] = useState("");
@@ -80,11 +124,18 @@ const getAllFreshCategories = async () => {
   console.log(items)
 };
   const uploadImage = (e) => {
+    // for (let i = 0; i < e.target.files.length; i++) {
+    //   const newImage = e.target.files[i];
+    //   newImage["id"] = Math.random();
+    //   setImages((prevState) => [...prevState, newImage]);
+    // }
+    const promises = [];
     setIsLoading(true);
-    const imageFile = e.target.files[0];
-    const storageRef = ref(storage, `Images/${Date.now()}-${imageFile.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, imageFile);
-
+  
+    images.map((image) => {
+    const storageRef = ref(storage, `Images/${Date.now()}-${image.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, image);
+    promises.push(uploadTask);
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -101,26 +152,55 @@ const getAllFreshCategories = async () => {
           setIsLoading(false);
         }, 4000);
       },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setImageAsset(downloadURL);
-          setIsLoading(false);
-          setFields(true);
-          setMsg("Image uploaded successfully 😊");
-          setAlertStatus("success");
-          setTimeout(() => {
-            setFields(false);
-          }, 4000);
-        });
+      async () => {
+       
+          getDownloadURL(uploadTask.snapshot.ref)
+          .then((urls) => {
+            setUrls((prevState) => [...prevState, urls]);
+            // setFields(true);
+            // setIsLoading(false);
+            // setMsg("Image uploaded successfully 😊");
+            // setAlertStatus("success");
+            // setTimeout(() => {
+            //   setFields(false);
+            // }, 4000);
+          });
+          Promise.all(promises)
+          .then(() => { 
+           setImages([]);
+            setFields(true);
+            setIsLoading(false);
+            setMsg("Image uploaded successfully 😊");
+            setAlertStatus("success");
+            setTimeout(() => {
+              setFields(false);
+            }, 4000);})
+          .catch((err) => console.log(err));
+            
       }
+      // () => {
+      //   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      //     setImageAsset(downloadURL);
+      //     setIsLoading(false);
+      //     setFields(true);
+      //     setMsg("Image uploaded successfully 😊");
+      //     setAlertStatus("success");
+      //     setTimeout(() => {
+      //       setFields(false);
+      //     }, 4000);
+      //   });
+      // }
     );
+  })
   };
 
   const deleteImage = () => {
     setIsLoading(true);
-    const deleteRef = ref(storage, imageAsset);
-    deleteObject(deleteRef).then(() => {
-      setImageAsset(null);
+    // urls.map((url,i) =>(
+   
+    
+    deleteObject(ref(storage, urls)).then(() => {
+      setUrls("");
       setIsLoading(false);
       setFields(true);
       setMsg("Image deleted successfully 😊");
@@ -128,7 +208,8 @@ const getAllFreshCategories = async () => {
       setTimeout(() => {
         setFields(false);
       }, 4000);
-    });
+    })
+    // ))
   };
 
   const saveDetails = () => {
@@ -146,7 +227,7 @@ const getAllFreshCategories = async () => {
         const data = {
           id: `${Date.now()}`,
           title: title,
-          imageURL:  [...images],
+          imageURL: urls,
           category: category,
           // calories: calories,
           qty: qty,
@@ -191,7 +272,7 @@ const getAllFreshCategories = async () => {
         const data = {
           id: `${Date.now()}`,
           title: title,
-          imageURL: imageAsset,
+          imageURL: urls,
           category: freshcategory,
           // calories: calories,
           qty: qty,
@@ -224,11 +305,13 @@ const getAllFreshCategories = async () => {
   const clearData = () => {
     setTitle("");
     setImageAsset(null);
-    setImages(null)
+    setImages([])
+    setUrls([]);
     setCalories("");
     setPrice("");
-    setCategory("Select Category");
-    setfreshCategory("Select Category");
+    setqty("");
+    setCategory("Select Category for hot deal");
+    setfreshCategory("Select Category for fresh food");
   };
 
   const fetchData = async () => {
@@ -326,51 +409,36 @@ const getAllFreshCategories = async () => {
               ))}
           </select>
         </div>
-        <ImageUploading
-        multiple //multiple image upload
-        value={images}
-        onChange={onChange}
-        maxNumber={maxNumber}
-        dataURLKey="data_url"
-      >
-        {({
-          imageList,
-          onImageUpload,
-          onImageRemoveAll,
-          onImageUpdate,
-          onImageRemove,
-          isDragging,
-          dragProps,
-        }) => (
+        {/* <div className="group flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full h-225 md:h-340 cursor-pointer rounded-lg"></div> */}
+       
+            <>
+        <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
+                    <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+                      <MdCloudUpload className="text-gray-500 text-3xl hover:text-gray-700" />
+                      
+                    </div>
+                    <input type="file" multiple onChange={handleChange}  className="" />
+                   
+                  </label>
+        
+        <div className="flex flex-row w-full justify-center">
+      <button className="  border-none outline-none bg-emerald-500 px-12 py-2 rounded-lg text-lg text-white font-semibold"
+       onClick={uploadImage}>Upload Images</button>
+     
+                    </div>
+      <br />
+      
+      </>
+         
+      
           
-          <div className="flex flex-col">
-            <button
-              style={isDragging ? { color: 'red' } : undefined}
-              onClick={onImageUpload}
-              {...dragProps}
-            >
-              Upload Image 
-            </button>
-            &nbsp;
-            <button onClick={onImageRemoveAll}>Remove all images</button>
-            {imageList.map((image, index) => (
-              <div key={index} className="image-item flex flex-row ">
-                <img src={image['data_url']} alt="" width="100" />
-                <div className="image-item__btn-wrapper">
-                  <button onClick={() => onImageUpdate(index)}>Update</button>
-                  <button onClick={() => onImageRemove(index)}>Remove</button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </ImageUploading>
-        {/* <div className="group flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full h-225 md:h-340 cursor-pointer rounded-lg">
+        
+        <div className="group flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full h-225 md:h-340 cursor-pointer rounded-lg">
           {isLoading ? (
             <Loader />
           ) : (
             <>
-              {!imageAsset ? (
+            {!urls ? (
                 <>
                   <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
                     <div className="w-full h-full flex flex-col items-center justify-center gap-2">
@@ -381,6 +449,7 @@ const getAllFreshCategories = async () => {
                     </div>
                     <input
                       type="file"
+                      multiple
                       name="uploadimage"
                       accept="image/*"
                       onChange={uploadImage}
@@ -388,14 +457,19 @@ const getAllFreshCategories = async () => {
                     />
                   </label>
                 </>
-              ) : (
+            ):(
                 <>
                   <div className="relative h-full">
-                    <img
-                      src={imageAsset}
-                      alt="uploaded image"
-                      className="w-full h-full object-cover"
-                    />
+                  <div className=" flex flex-row">
+                  {urls.map((url, i) => (
+        <img
+          key={i}
+          style={{ width: "180px" }}
+          src={url || "http://via.placeholder.com/300"}
+          alt="firebase-image"
+        />
+      ))}
+      </div>
                     <button
                       type="button"
                       className="absolute bottom-3 right-3 p-3 rounded-full bg-red-500 text-xl cursor-pointer outline-none hover:shadow-md  duration-500 transition-all ease-in-out"
@@ -405,10 +479,11 @@ const getAllFreshCategories = async () => {
                     </button>
                   </div>
                 </>
-              )}
+            )
+            }
             </>
           )}
-        </div> */}
+        </div>
 
         <div className="w-full flex flex-col md:flex-row items-center gap-3">
           <div className="w-full py-2 border-b border-gray-300 flex items-center gap-2">

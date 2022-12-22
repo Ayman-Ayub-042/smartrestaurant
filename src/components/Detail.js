@@ -23,6 +23,8 @@ import { actionType } from "../context/reducer";
 import { MdShoppingBasket } from "react-icons/md";
 import { saveReview} from "../utils/firebaseFunctions";
 import { useStateValue } from "../context/StateProvider";
+import { Image } from 'react-bootstrap';
+
 import Review from './Review';
 import MenuItems from './MenuItems';
 import { TextField } from '@material-ui/core';
@@ -137,7 +139,7 @@ const Detail = () => {
     console.log(fooditems,imageitem)
 
     {fooditems?.map((item)=>{
-      setimageitem(item.imageURL)
+      setimageitem(item?.imageURL[0])
       
     })}
   };
@@ -170,7 +172,7 @@ const Detail = () => {
     addtocart();
   }, [items]);
 
-  const [currentImage, setCurrentImage] = useState('imageitem[0]')
+  const [currentImage, setCurrentImage] = useState("")
   return (
     <div
    
@@ -185,32 +187,41 @@ const Detail = () => {
           key={item?.id}
           className=" motion   bg-primary rounded-lg py-2 px-4  my-12 backdrop-blur-lg   flex flex-row items-left justify-left "
         >
-         {/* {currentImage && ( */}
-        <div className='flex flex-col w-[620px] '>
        
-          <div className="motion border-orange-500 border-2 ">
+        <div className='flex flex-col gap-4 w-[620px]  '>
+        {currentImage ? (
+          <div className="motion border-orange-500 items-center justify-center p-5 mt-5 border-2 ">
+           
+             <InnerImageZoom   alt=""
+                className=" w-[620px] h-[590px] object-fill" src={currentImage} />
+            </div>
+            ):(
+              <div className="motion border-orange-500 items-center justify-center p-5 mt-5 border-2 ">
            
              <InnerImageZoom   alt=""
                 className=" w-[620px] h-[590px] object-fill" src={item?.imageURL[0]} />
-              {/* <img
-                src={item?.imageURL}
-                alt=""
-                className="w-[600px] h-full object-contain"
-              /> */}
-           
-           
             </div>
-            <Carousel cols={2} rows={2} gap={5} loop> 
-            {imageitem.map((val,ind) => (
-                            <Carousel.Item key={ind}>
-                                <img onClick={() => setCurrentImage(val)}  src={val} className="w-100" />
+            )
+            }
+            {/* <Carousel interval={3000} indicators>
+      {item?.imageURL.map((image) => (
+        <Carousel.Item key={image}>
+          <Image src={image} alt="image" />
+        </Carousel.Item>
+      ))}
+    </Carousel> */}
+
+            <Carousel cols={2} rows={1} gap={6} loop > 
+            {item?.imageURL.map((image) => (
+                            <Carousel.Item key={image} className=" px-5">
+                                <img onClick={() => setCurrentImage(image)}  src={image} className="w-100" />
                             </Carousel.Item>
                         ))}
             </Carousel>
         
            </div>
         
-           {/* )} */}
+          
            
          
             

@@ -4,6 +4,7 @@
     border-top-right-radius: calc(0.25rem - 1px);
     margin-top: 20px;
     padding-top: 20px;
+    margin-left: 40px;
 }
 
 #faqbar a:not([href]):not([class]):hover {
@@ -17,7 +18,7 @@
     font-size: 16px;
 }
 
-#faqbar .List-group {
+.List-group {
     display: flex;
     flex-direction: column;
     padding-left: 0;
@@ -28,21 +29,21 @@
     background-color: lightgrey;
 }
 
-#faqbar .list-group-item {
+ .list-group-item {
     position: relative;
     display: block;
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1.5rem;
     color: #212529;
     text-decoration: none;
     background-color: lightgrey;
-    border: 1px solid rgba(0, 0, 0, 0);
-    border-bottom: 1px solid lightgray;
+    /* border: 1px solid rgba(0, 0, 0, 0); */
+    border-bottom: 1px solid rgb(94, 92, 92);
     border-top: 0px;
     border-left: 0px;
     border-right: 0px;
 }
 
-#faqbar .list-group-item a {
+.list-group-item a {
     text-decoration: none;
-    color: rgb(10, 9, 9);
+    color: rgb(36, 35, 35);
 }

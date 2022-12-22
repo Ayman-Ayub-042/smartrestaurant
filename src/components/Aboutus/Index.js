@@ -17,8 +17,8 @@ function Index() {
         <div>
             <>
                 <Container>
-                    <Row>
-                        <Col className="bg-secondary mt-5 mb-3" lg={3} id="faqbar">
+                    <Row className='flex flex-row'>
+                        <Col className="bg-secondary mt-5 mb-3 w-[450px] h-[700px]" lg={5} id="faqbar">
                             <ListGroup className="border-top-0 border-bottom-0 List-group" id="">
                                 <ListGroup.Item className="profileicon list-group-item">
                                     {' '}
@@ -77,7 +77,7 @@ function Index() {
                                         Privacy Policy
                                     </a>
                                 </ListGroup.Item>
-                                <ListGroup.Item className="profileicon list-group-item">
+                                <ListGroup.Item className="profileicon list-group-item mb-20">
                                     {' '}
                                     <a
                                         // href="#shipment"
@@ -93,7 +93,7 @@ function Index() {
                             </ListGroup>
                         </Col>
 
-                        <Col lg={9} className="pt-5" id="page">
+                        <Col lg={8} className="m-10 w-[850px] " id="page">
                             {/* <Faq/> */}
                             {view === 'shipment' ? (
                                 <Shipment />

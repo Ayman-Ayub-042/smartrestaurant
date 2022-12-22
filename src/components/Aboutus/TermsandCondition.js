@@ -6,8 +6,8 @@ import Col from 'react-bootstrap/Col';
 const TermsandCondition = () => {
     return (
         <Col>
-            <div>TermsandCondition</div>
-            <p>
+            <div className='text-headingColor text-xl font-semibold mb-4'>Terms and Condition</div>
+            <p className='justify-between text-lg font-normal '>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde optio modi quisquam, labore cumque ducimus
                 dolor fugit deleniti natus placeat culpa! Facere deserunt quibusdam earum. Dolore culpa adipisci
                 officiis exercitationem, a cum placeat iure doloremque magnam fuga perferendis. Accusamus repellendus

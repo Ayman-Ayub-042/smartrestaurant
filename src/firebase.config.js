@@ -2,6 +2,7 @@ import { getApp, getApps, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth,onAuthStateChanged } from "firebase/auth";
+import "firebase/storage";
 const firebaseConfig = {
   apiKey: "AIzaSyCYAdRZUA22aQ3t5QedtYO8JmFbYCyO_BU",
   authDomain: "smart-restaurantfyp.firebaseapp.com",
