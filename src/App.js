@@ -18,6 +18,8 @@ import Detail from "./components/Detail";
 import Index from "./components/Aboutus/Index";
 import Review from "./components/Review";
 import Loader from 'react-loader-bubble'
+import Scanner from "./components/Scanner";
+import QrCodeReader from "./components/QrCodeReader";
 
 const App = ({loading}) => {
   const [{ foodItems }, dispatch] = useStateValue();
@@ -153,7 +155,8 @@ const config = {
             <Route path="/menu" element={<Menu/>}/>
             <Route path="/home" element={<Home/>}/>
             <Route path="/service" element={<Service/>}/>
-           
+            <Route path="/scanner" element={<Scanner/>}/>
+            <Route path="/qrcode" element={<QrCodeReader/>}/>
             <Route path="/hotmenu" element={<MenuContainer/>} />
           
             <Route path="/mainmenu" element={<MainContainer/>} />

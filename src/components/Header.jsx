@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MdShoppingBasket, MdAdd, MdLogout ,MdSettings,MdDarkMode} from "react-icons/md";
+import { MdShoppingBasket, MdAdd, MdLogout ,MdSettings,MdDarkMode, MdScanner, MdQrCode} from "react-icons/md";
 import { motion } from "framer-motion";
 import "../styles/dark.css"
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -178,6 +178,18 @@ const Header = () => {
                   </Link>
                   
                 )}
+                {user && user.email === "admin@gmail.com" && (
+                  <Link to={"/qrcode"}>
+                    <p
+                      className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
+                      onClick={() => setIsMenu(false)}
+                    >
+                      QrCodeReader <MdQrCode />
+                    </p>
+                  </Link>
+                  
+                )}
+                
                 <Link to={"/edituser"}>
                     <p
                       className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
@@ -192,6 +204,19 @@ const Header = () => {
                 >
                   Logout <MdLogout />
                 </p>
+                {(user && user.email === "admin@gmail.com") ? (
+                  <div></div>
+                ):(
+                  <Link to={"/scanner"}>
+                    <p
+                      className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
+                      onClick={() => setIsMenu(false)}
+                    >
+                      Qr Scanner <MdScanner />
+                    </p>
+                  </Link>
+                  
+                )}
               </motion.div>
             )}
           </div>

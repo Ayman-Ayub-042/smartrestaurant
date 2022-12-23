@@ -138,7 +138,9 @@ const Login = () => {
         <div className="login_container">
         {err ? <p className="paraline">Invalid Credentials!</p> : ""}
             <h1>Sign-In</h1>
-           
+            <Link to="/scannerr">
+            <button type='submit' className='login_registerButton w-56 xl:ml-36 lg:ml-32 '>Scan to Order</button>
+</Link>
             <button type='submit'  onClick={login1} className='login_signinButton'>Sign In with Google</button>
                <div>
                 <InputField
