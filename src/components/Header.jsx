@@ -118,8 +118,21 @@ const Header = () => {
               Service
             </li>
             </Link>
+            {(user && user.email === "admin@gmail.com") ? (
+              <Link to={"/table"}>
+            <li className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
+              Table
+            </li>
+            </Link>
+                ):(
+            <Link to={"/bookingtable"}>
+            <li className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
+              Book Table
+            </li>
+            </Link>
+            )}
           </motion.ul>
-
+       
           <div
             className="relative flex items-center justify-center"
             onClick={showCart}
@@ -178,6 +191,18 @@ const Header = () => {
                   </Link>
                   
                 )}
+                {user && user.email === "admin@gmail.com" && (
+                  <Link to={"/createtable"}>
+                    <p
+                      className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
+                      onClick={() => setIsMenu(false)}
+                    >
+                      Add Table <MdAdd />
+                    </p>
+                  </Link>
+                  
+                )}
+                
                 {user && user.email === "admin@gmail.com" && (
                   <Link to={"/qrcode"}>
                     <p

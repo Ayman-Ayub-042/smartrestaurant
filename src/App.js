@@ -16,10 +16,21 @@ import ChatBot from 'react-simple-chatbot';
 import { ThemeProvider } from 'styled-components';
 import Detail from "./components/Detail";
 import Index from "./components/Aboutus/Index";
-import Review from "./components/Review";
+
 import Loader from 'react-loader-bubble'
 import Scanner from "./components/Scanner";
 import QrCodeReader from "./components/QrCodeReader";
+import CreateTable from "./components/CreateTable";
+import BookingTable from "./components/BookingTable";
+import Table from "./components/Table";
+import TableUpdate from "./components/TableUpdate";
+import BookingPayment from "./components/BookingPayment";
+import Payment from "./components/Payment";
+import Booking from "./components/Booking";
+import Success from "./components/Success";
+import Cancel from "./components/Cancel";
+import Multisteps from "./components/Multisteps";
+import Final from "./components/multistep/steps/Final";
 
 const App = ({loading}) => {
   const [{ foodItems }, dispatch] = useStateValue();
@@ -158,11 +169,19 @@ const config = {
             <Route path="/scanner" element={<Scanner/>}/>
             <Route path="/qrcode" element={<QrCodeReader/>}/>
             <Route path="/hotmenu" element={<MenuContainer/>} />
-          
+            <Route path="/createtable" element={<CreateTable/>} />
             <Route path="/mainmenu" element={<MainContainer/>} />
             <Route path="/aboutus" element={<Index/>} />
-            <Route path="/review" element={<Review/>} />
+            <Route path="/table" element={<Table/>} />
+            <Route path="/table/tableupdate/:id" element={<TableUpdate/>} />
+            <Route path="/bookingtable" element={<BookingTable/>} />
+            <Route path="/payment/:idd" element={<Payment/>} />
+            {/* <Route path="/bookingtable/bookingpayment/:idd" element={<Booking/>} /> */}
+            <Route path="/bookingtable/bookingpayment/:idd/:date/:time" element={<Multisteps/>} />
             <Route path="/detail/:category/:id" element={<Detail />} />
+            <Route path="/booking" element={<Booking/>} />
+            <Route path="/success/:idd/:date/:time" element={<Final/>} />
+          <Route path="/cancel" element={<Cancel/>} />
           </Routes>
           <ThemeProvider theme={theme}>
                 <ChatBot

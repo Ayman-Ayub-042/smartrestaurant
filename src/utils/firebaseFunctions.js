@@ -7,6 +7,17 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { firestore } from "../firebase.config";
+export const saveBooking = async (data) => {
+  await setDoc(doc(firestore, "Booking", `${Date.now()}`), data, {
+    merge: true,
+  });
+};
+// Saving new Review
+export const saveTable = async (tabledata) => {
+  await setDoc(doc(firestore, "Table", `${Date.now()}`), tabledata, {
+    merge: true,
+  });
+};
 // Saving new Review
 export const saveReview = async (reviewdata) => {
   await setDoc(doc(firestore, "Review", `${Date.now()}`), reviewdata, {

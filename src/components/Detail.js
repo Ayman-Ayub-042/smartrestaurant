@@ -4,6 +4,7 @@ import InnerImageZoom from 'react-inner-image-zoom';
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css';
 import Rating from '@material-ui/lab/Rating';
 import Carousel from 'better-react-carousel';
+import CartContainer from './CartContainer';
 import {
   collection,
   doc,
@@ -25,7 +26,7 @@ import { saveReview} from "../utils/firebaseFunctions";
 import { useStateValue } from "../context/StateProvider";
 import { Image } from 'react-bootstrap';
 
-import Review from './Review';
+
 import MenuItems from './MenuItems';
 import { TextField } from '@material-ui/core';
 import { Star } from '@material-ui/icons';
@@ -46,7 +47,7 @@ const Detail = () => {
   const [msg, setMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isReview, setIsReview] = useState(false);
-
+  const [{  freshfoodItems, cartShow },] = useStateValue();
   const getAllReviewItems = async () => {
     const items = await getDocs(
       collection(firestore, "Review")
@@ -170,7 +171,7 @@ const Detail = () => {
   }, []);
   useEffect(() => {
     addtocart();
-  }, [items]);
+  }, [items,cartShow]);
 
   const [currentImage, setCurrentImage] = useState("")
   return (
@@ -498,6 +499,7 @@ const Detail = () => {
       
     </div>
 </div>
+{cartShow && <CartContainer />}
   </div>
   )
 }

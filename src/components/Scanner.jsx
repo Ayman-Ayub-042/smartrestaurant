@@ -16,10 +16,7 @@ class Scanner extends React.Component {
       // This binding is necessary to make `this` work in the callback.
       this.onNewScanResult = this.onNewScanResult.bind(this);
     
-        const urlStr = String( this.state.decodedResults).trim(); 
-        if (urlStr.indexOf("https://github.com/honglytech/reactjs/blob/react-firebase-multiple-images-upload/src/index.js") !== -1) { window.location.replace(urlStr);}
-        // window.location.replace( result.decodedText)
-    
+       
     
     }
     
