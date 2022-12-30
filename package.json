@@ -46,6 +46,7 @@
     "react-scripts": "5.0.0",
     "react-simple-chatbot": "^0.6.1",
     "react-stripe-checkout": "^2.6.3",
+    "react-to-print": "^2.14.10",
     "stripe": "^11.5.0",
     "style-component": "^0.0.1",
     "styled-components": "^4.4.1",

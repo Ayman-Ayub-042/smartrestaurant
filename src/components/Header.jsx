@@ -119,11 +119,18 @@ const Header = () => {
             </li>
             </Link>
             {(user && user.email === "admin@gmail.com") ? (
+              <>
               <Link to={"/table"}>
             <li className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
               Table
             </li>
             </Link>
+            <Link to={"/showbooking"}>
+            <li className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
+              Booking
+            </li>
+            </Link>
+            </>
                 ):(
             <Link to={"/bookingtable"}>
             <li className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
@@ -131,6 +138,7 @@ const Header = () => {
             </li>
             </Link>
             )}
+          
           </motion.ul>
        
           <div

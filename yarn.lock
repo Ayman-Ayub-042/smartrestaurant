@@ -15834,6 +15834,13 @@ react-stripe-checkout@^2.6.3:
   resolved "https://registry.npmjs.org/react-stripe-checkout/-/react-stripe-checkout-2.6.3.tgz"
   integrity sha512-lnsCaAdlmwPGGMbQoI8FXtQUgEm+ktzPZ/ipAw4j0HYf80kef7CivGx6QitmgEn99/aa5hI/dmVXwfVZW/Mzfg==
 
+react-to-print@^2.14.10:
+  version "2.14.10"
+  resolved "https://registry.yarnpkg.com/react-to-print/-/react-to-print-2.14.10.tgz#f063bb368c2d8926012d52780a2b983e91c3a797"
+  integrity sha512-XJyhDWH/xxgHy5nIBYPXjVidoroq0qRHqTrVF5QbfohPkMx3q8x3H3+Lv7gSq9uA0csAbjkSU0J4mWgj64f6yQ==
+  dependencies:
+    prop-types "^15.8.1"
+
 react-transition-group@^4.4.0, react-transition-group@^4.4.2, react-transition-group@^4.4.5:
   version "4.4.5"
   resolved "https://registry.npmjs.org/react-transition-group/-/react-transition-group-4.4.5.tgz"
@@ -17551,7 +17558,7 @@ svgo@^2.7.0:
 
 sweetalert2@^11.6.16:
   version "11.6.16"
-  resolved "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.6.16.tgz"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-11.6.16.tgz#ed3062b4b06a5dc81bb4fe4f245ff8b9e432b2d8"
   integrity sha512-T2FO8LptErsjE4r0WMfiSk4YbeUvPadNaUZ/cADMEOnws000znrf8zFX9S5e/spvzJDyRI5En73WQyDZhGypxQ==
 
 symbol-tree@^3.2.2, symbol-tree@^3.2.4:

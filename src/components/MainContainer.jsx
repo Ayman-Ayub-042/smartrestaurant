@@ -25,10 +25,11 @@ import {
 import { firestore } from "../firebase.config";
 
 import BarsLoader from 'react-loaders-kit/lib/bars/BarsLoader';
+import { Link } from "react-router-dom";
 const MainContainer = ({loading}) => {
   const [{  user,freshfoodItems, cartShow }, dispatch] = useStateValue();
   const [scrollValue, setScrollValue] = useState(0);
-  const [filter, setFilter] = useState("fruit");
+  const [filter, setFilter] = useState("abc");
   const [{foodfreshCategory}] = useStateValue();
   const [isLoading, setIsLoading] = useState(false);
 const [freshfood,setfreshfood] = useState()
@@ -211,12 +212,14 @@ const deletefreshitem = async (id) => {
                 className="w-40 bg-gray-50 shadow-xl rounded-lg flex flex-col relative right-0"
               >
                
-                    {/* <p
+               <Link to={`/updatefreshcategory/${id}`}>
+                    <p
                       className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
                       onClick={() => setIsMenu(false)}
                     >
                       Update <MdAdd />
-                    </p> */}
+                    </p>
+                    </Link>
                  
              
                     <p

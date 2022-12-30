@@ -15,12 +15,17 @@ import { firestore } from "../firebase.config";
 const BookingTable = () => {
   const [filter, setFilter] = useState("");
   const [id, setId] = useState("");
+  const [tableid, settableId] = useState("");
+  const [bookingtime, setBookingtime] = useState("");
+  const [bookingdate, setBookingdate] = useState("");
   const [search, setSearch] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [booked, setBooked] = useState("");
   const [TableValue, setTableValue]=useState()
   const [Booking, setBooking]=useState()
+  const bookingdate1 =[];
+
   const getAllTable = async () => {
     const items = await getDocs(
       query(collection(firestore, "Table"))
@@ -30,23 +35,31 @@ const BookingTable = () => {
     setTableValue(items.docs.map((doc) => doc.data()));
   };
 
-  const getTable = async () => {
+  const getAllBooking = async () => {
     const items = await getDocs(
-      query(collection(firestore, `Table`))
+      query(collection(firestore, "Booking"))
+      
     );
   
     setBooking(items.docs.map((doc) => doc.data()));
-    console.log(Booking,search)
-   
+    Booking?.map((val)=>{
+      settableId(val.tableid)
+      setBookingdate(val.date)
+      setBookingtime(val.starttime)
+      bookingdate1.push(bookingdate)
+  })
+  console.log(tableid,bookingdate,bookingtime)
   };
-  const login1 = async (title,id) => {
+  console.log(tableid,bookingdate,bookingtime,bookingdate1)
+  
+  const detail = async (title,id) => {
     setId(id);
       setFilter(title);
   };
   console.log(booked,time,date)
   useEffect(() => {
     getAllTable()
-   getTable()
+   getAllBooking()
   
   }, []);
   return (
@@ -107,9 +120,9 @@ const BookingTable = () => {
               booked ? ( 
                  category.seats == booked && (
                   date && time ? (
-                    category.time((timee)=>{
+                   
                      
-              category.date == date && timee == time ? (
+              bookingdate == date && bookingtime == time && tableid == category.id ? (
               
               <div 
               className='w-22 h-20 bg-orange-200 text-heading'  >
@@ -120,7 +133,7 @@ const BookingTable = () => {
               </div>
             ) : (
               <div
-                onClick={() => {login1(category.title,category.id)}}
+                onClick={() => {detail(category.title,category.id)}}
                 className={`group ${
                   filter === category.title ? "border-black bg-orange-400 border-2 motion1" : "bg-orange-400 motion"
                 } w-22  h-20  cursor-pointer text-white  drop-shadow-xl items-center justify-center  `}
@@ -131,10 +144,10 @@ const BookingTable = () => {
             
               </div>
             )
-         })
+         
                   ):(
                     <div
-                onClick={() => {login1(category.title,category.id)}}
+                onClick={() => {detail(category.title,category.id)}}
                 className={`group ${
                   filter === category.title ? "border-black bg-orange-400 border-2 motion1" : "bg-orange-400 motion"
                 } w-22  h-20  cursor-pointer text-white  drop-shadow-xl items-center justify-center  `}
@@ -147,7 +160,10 @@ const BookingTable = () => {
                   )
               )):(
                 date && time ? (
-                category.date == date && category.time == time ? (
+
+               Booking.map((val)=>(
+                     
+              val.date == date && val.starttime == time && val.tableid == category.id ? (
               
               <div 
               className='w-22 h-20 bg-orange-200 text-heading'  >
@@ -158,7 +174,7 @@ const BookingTable = () => {
               </div>
             ):(
               <div
-                onClick={() => {login1(category.title,category.id)}}
+                onClick={() => {detail(category.title,category.id)}}
                 className={`group ${
                   filter === category.title ? "border-black bg-orange-400 border-2 motion1" : "bg-orange-400 motion"
                 } w-22  h-20  cursor-pointer text-white  drop-shadow-xl items-center justify-center  `}
@@ -169,9 +185,11 @@ const BookingTable = () => {
             
               </div>
             )
+               ))
+                
                 ):(
                   <div
-                onClick={() => {login1(category.title,category.id)}}
+                onClick={() => {detail(category.title,category.id)}}
                 className={`group ${
                   filter === category.title ? "border-black bg-orange-400 border-2 motion1" : "bg-orange-400 motion"
                 } w-22  h-20  cursor-pointer text-white  drop-shadow-xl items-center justify-center  `}

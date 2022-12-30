@@ -17,6 +17,7 @@ import {
   orderBy,
   query,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { firestore } from "../firebase.config";
 import { categories } from "../utils/data";
@@ -33,9 +34,13 @@ import { getAllFoodItems, saveItem,savefreshItem,getAllfreshFoodItems } from "..
 import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
 import { stringify } from "postcss";
+import { useNavigate, useParams } from "react-router-dom";
 
-const CreateContainer = () => {
- 
+const UpdateFreshItem = () => {
+  const navigate = useNavigate()
+  const { id } = useParams();
+  console.log(id)
+  const [freshfooditems,setfreshfooditems] = useState()
   const [images, setImages] = useState([]);
   const [urls, setUrls] = useState([]);
   const [progress, setProgress] = useState(0);
@@ -43,6 +48,15 @@ const CreateContainer = () => {
   const maxNumber = 3;//maximum image upload
   const onChange = (imageList) => {
     setImages(imageList);
+  };
+  const getAllfreshFoodItems = async () => {
+    setIsLoading(true);
+    const items = await getDocs(
+      query(collection(firestore, "freshfoodItems"), orderBy("id", "desc"))
+    );
+  
+    setfreshfooditems(items.docs.map((doc) => doc.data()));
+    setIsLoading(false);
   };
 
   const handleChange = (e) => {
@@ -157,13 +171,7 @@ const getAllFreshCategories = async () => {
           getDownloadURL(uploadTask.snapshot.ref)
           .then((urls) => {
             setUrls((prevState) => [...prevState, urls]);
-            // setFields(true);
-            // setIsLoading(false);
-            // setMsg("Image uploaded successfully 😊");
-            // setAlertStatus("success");
-            // setTimeout(() => {
-            //   setFields(false);
-            // }, 4000);
+           
           });
           Promise.all(promises)
           .then(() => { 
@@ -178,18 +186,7 @@ const getAllFreshCategories = async () => {
           .catch((err) => console.log(err));
             
       }
-      // () => {
-      //   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-      //     setImageAsset(downloadURL);
-      //     setIsLoading(false);
-      //     setFields(true);
-      //     setMsg("Image uploaded successfully 😊");
-      //     setAlertStatus("success");
-      //     setTimeout(() => {
-      //       setFields(false);
-      //     }, 4000);
-      //   });
-      // }
+     
     );
   })
   };
@@ -212,54 +209,12 @@ const getAllFreshCategories = async () => {
     // ))
   };
 
-  const saveDetails = () => {
-    setIsLoading(true);
-    try {
-      if (!title || !qty  || !price || !category) {
-        setFields(true);
-        setMsg("Required fields can't be empty");
-        setAlertStatus("danger");
-        setTimeout(() => {
-          setFields(false);
-          setIsLoading(false);
-        }, 4000);
-      } else {
-        const data = {
-          id: `${Date.now()}`,
-          title: title,
-          imageURL: urls,
-          category: category,
-          // calories: calories,
-          qty: qty,
-          price: price,
-        };
-        saveItem(data);
-        setIsLoading(false);
-        setFields(true);
-        setMsg("Data Uploaded successfully 😊");
-        setAlertStatus("success");
-        setTimeout(() => {
-          setFields(false);
-        }, 4000);
-        clearData();
-      }
-    } catch (error) {
-      console.log(error);
-      setFields(true);
-      setMsg("Error while uploading : Try AGain 🙇");
-      setAlertStatus("danger");
-      setTimeout(() => {
-        setFields(false);
-        setIsLoading(false);
-      }, 4000);
-    }
+ 
 
-    fetchData();
-  };
-
-  const savefreshDetails = () => {
+  const updatefreshDetails =async (uid) => {
+    console.log(uid)
     setIsLoading(true);
-    try {
+   let data ={}
       if (!title || !qty  || !price || !freshcategory) {
         setFields(true);
         setMsg("Required fields can't be empty");
@@ -269,8 +224,8 @@ const getAllFreshCategories = async () => {
           setIsLoading(false);
         }, 4000);
       } else {
-        const data = {
-          id: `${Date.now()}`,
+         data = {
+         
           title: title,
           imageURL: urls,
           category: freshcategory,
@@ -278,7 +233,9 @@ const getAllFreshCategories = async () => {
           qty: qty,
           price: price,
         };
-        savefreshItem(data);
+      
+        const updatedocument = doc(firestore, "freshfoodItems", uid);
+        await updateDoc(updatedocument, data);
         setIsLoading(false);
         setFields(true);
         setMsg("Data Uploaded successfully 😊");
@@ -287,20 +244,9 @@ const getAllFreshCategories = async () => {
           setFields(false);
         }, 4000);
         clearData();
+        navigate("/*")
       }
-    } catch (error) {
-      console.log(error);
-      setFields(true);
-      setMsg("Error while uploading : Try AGain 🙇");
-      setAlertStatus("danger");
-      setTimeout(() => {
-        setFields(false);
-        setIsLoading(false);
-      }, 4000);
-    }
-
-
-   
+  
   };
 
   const clearData = () => {
@@ -315,30 +261,16 @@ const getAllFreshCategories = async () => {
     setfreshCategory("Select Category for fresh food");
   };
 
-  const fetchData = async () => {
-    await getAllFoodItems().then((data) => {
-      dispatch({
-        type: actionType.SET_FOOD_ITEMS,
-        foodItems: data,
-      });
-    });
-  };
-
-  const fetchfreshData = async () => {
-    await getAllfreshFoodItems().then((data) => {
-      dispatch({
-        type: actionType.SET_FRESH_FOOD_ITEMS,
-        freshfoodItems: data,
-      });
-    });
-  };
+  
   useEffect(() => {
     getAllCategories()
     getAllFreshCategories()
-  
+    getAllfreshFoodItems()
   }, []);
   return (
     <div className="w-full min-h-screen bg-primary flex items-center justify-center">
+      {freshfooditems?.map((item)=>(
+        item.id === id && (
       <div className="w-[90%] md:w-[50%] border bg-primary border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
         {fields && (
           <motion.p
@@ -362,34 +294,13 @@ const getAllFreshCategories = async () => {
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Give me a title..."
+            placeholder={item.title}
             className="w-full h-full text-lg bg-transparent outline-none border-none placeholder:text-gray-400 text-textColor"
           />
         </div>
 
-        <div className="w-full">
-          <select
-            onChange={(e) => setCategory(e.target.value)}
-            className="outline-none w-full text-base border-b-2 border-gray-200 p-2 rounded-md cursor-pointer"
-          >
-            <option value="other" className="bg-white">
-              Select Category for hot deal
-            </option>
-            {food &&
-            food.map((item) => (
-                <option
-                  key={item.id}
-                  className="text-base border-0 outline-none capitalize bg-white text-headingColor"
-                  value={item.title}
-                >
-                  {item.title}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div className=" justify-center items-center">
-          <p className="justify-center">OR</p>
-        </div>
+       
+       
         <div className="w-full">
           <select
             onChange={(e) => setfreshCategory(e.target.value)}
@@ -494,7 +405,7 @@ const getAllFreshCategories = async () => {
               required
               value={qty}
               onChange={(e) => setqty(e.target.value)}
-              placeholder="Quantity"
+              placeholder={item.qty}
               className="w-full h-full text-lg bg-transparent outline-none border-none placeholder:text-gray-400 text-textColor"
             />
           </div>
@@ -506,32 +417,28 @@ const getAllFreshCategories = async () => {
               required
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              placeholder="Price"
+              placeholder={item.price}
               className="w-full h-full text-lg bg-transparent outline-none border-none placeholder:text-gray-400 text-textColor"
             />
           </div>
         </div>
 
         <div className="flex flex-row justify-center gap-5">
-          <button
-            type="button"
-            className="ml-0 md:ml-auto w-full md:w-auto border-none outline-none bg-emerald-500 px-12 py-2 rounded-lg text-lg text-white font-semibold"
-            onClick={saveDetails}
-          >
-            Save in Hot Items
-          </button>
+         
 
           <button
             type="button"
             className="ml-0 md:ml-auto w-full md:w-auto border-none outline-none bg-emerald-500 px-12 py-2 rounded-lg text-lg text-white font-semibold"
-            onClick={savefreshDetails}
+            onClick={()=>updatefreshDetails(item.id)}
           >
             Save in Fresh Items
           </button>
         </div>
       </div>
+        )
+      ))}
     </div>
   );
 };
 
-export default CreateContainer;
+export default UpdateFreshItem;

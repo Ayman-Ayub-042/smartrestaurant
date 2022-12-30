@@ -31,6 +31,13 @@ import Success from "./components/Success";
 import Cancel from "./components/Cancel";
 import Multisteps from "./components/Multisteps";
 import Final from "./components/multistep/steps/Final";
+import ShowBooking from "./components/ShowBooking";
+import BookingUpdate from "./components/BookingUpdate";
+import UpdateCategory from "./components/UpdateHotCategory";
+import UpdateHotCategory from "./components/UpdateHotCategory";
+import UpdateFreshCategory from "./components/UpdateFreshCategory";
+import UpdateFreshItem from "./components/UpdateFreshItem";
+import UpdateHotItem from "./components/UpdateHotItem";
 
 const App = ({loading}) => {
   const [{ foodItems }, dispatch] = useStateValue();
@@ -161,7 +168,11 @@ const config = {
         
             <Route path="/*" element={<HomeContainer />} />
             <Route path="/CreateItem" element={<CreateContainer />} />
+            <Route path="/updatefreshitem/:id" element={<UpdateFreshItem/>} />
+            <Route path="/updatehotitem/:id" element={<UpdateHotItem/>} />
             <Route path="/createcategory" element={<CreateCategory />} />
+            <Route path="/updatehotcategory/:id" element={<UpdateHotCategory/>} />
+            <Route path="/updatefreshcategory/:id" element={<UpdateFreshCategory/>} />
             <Route path="/edituser" element={<EditUser/>} />
             <Route path="/menu" element={<Menu/>}/>
             <Route path="/home" element={<Home/>}/>
@@ -180,6 +191,8 @@ const config = {
             <Route path="/bookingtable/bookingpayment/:idd/:date/:time" element={<Multisteps/>} />
             <Route path="/detail/:category/:id" element={<Detail />} />
             <Route path="/booking" element={<Booking/>} />
+            <Route path="/showbooking" element={<ShowBooking/>} />
+            <Route path="/showbooking/bookingupdate/:id" element={<BookingUpdate/>} />
             <Route path="/success/:idd/:date/:time" element={<Final/>} />
           <Route path="/cancel" element={<Cancel/>} />
           </Routes>

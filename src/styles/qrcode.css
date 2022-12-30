@@ -12,7 +12,9 @@
 }
 .input__group {
   display: flex;
+  flex-direction: column;
   margin-top: 2em;
+  gap: 10px;
 }
 .input__group input {
   width: 100%;

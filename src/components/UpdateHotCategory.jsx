@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import {
@@ -20,20 +20,36 @@ import { storage } from "../firebase.config";
 import { getAllCategories, saveCategory,getAllFreshCategories,saveFreshCategory } from "../utils/firebaseFunctions";
 import { actionType } from "../context/reducer";
 import { useStateValue } from "../context/StateProvider";
-
-const CreateCategory = () => {
+import { useParams } from "react-router-dom";
+import {
+    collection,
+    doc,
+    getDocs,
+    orderBy,
+    query,
+    setDoc,
+    updateDoc,
+    deleteDoc,
+  } from "firebase/firestore";
+  import { firestore } from "../firebase.config";
+const UpdateHotCategory = () => {
+    const { id } = useParams();
+    console.log(id)
   const [title, setTitle] = useState("");
-  const [qty, setqty] = useState("");
-  const [calories, setCalories] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState(null);
   const [imageAsset, setImageAsset] = useState(null);
   const [fields, setFields] = useState(false);
+  const [food,setfood] = useState()
   const [alertStatus, setAlertStatus] = useState("danger");
   const [msg, setMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [{ foodCategory }, dispatch] = useStateValue();
-
+  const getAllCategories = async () => {
+    const items = await getDocs(
+      query(collection(firestore, "foodCategory"))
+    );
+  
+    setfood(items.docs.map((doc) => doc.data()));
+  };
   const uploadImage = (e) => {
     setIsLoading(true);
     const imageFile = e.target.files[0];
@@ -85,123 +101,57 @@ const CreateCategory = () => {
       }, 4000);
     });
   };
-
-  const saveDetails = () => {
-    setIsLoading(true);
-    try {
-      if (!title ||  !imageAsset) {
-        setFields(true);
-        setMsg("Required fields can't be empty");
-        setAlertStatus("danger");
-        setTimeout(() => {
-          setFields(false);
-          setIsLoading(false);
-        }, 4000);
-      } else {
-        const datacategory = {
-          id: `${Date.now()}`,
-          title: title,
-          imageURL: imageAsset,
-         
-        };
-        saveCategory(datacategory);
-        setIsLoading(false);
-        setFields(true);
-        setMsg("Data Uploaded successfully ");
-        setAlertStatus("success");
-        setTimeout(() => {
-          setFields(false);
-        }, 4000);
-        clearData();
-      }
-    } catch (error) {
-      console.log(error);
-      setFields(true);
-      setMsg("Error while uploading : Try AGain ");
-      setAlertStatus("danger");
-      setTimeout(() => {
-        setFields(false);
-        setIsLoading(false);
-      }, 4000);
+  const updateuser = async (uid) => {
+     
+    let userArray = {};
+    if (  imageAsset !== "" && title !== "") {
+      userArray = {
+         title: title,
+        imageURL: imageAsset,
+      };
     }
+    if ( imageAsset === "" && title !== "") {
+      userArray = {
+        title: title,
+      };
+    }
+    if (  imageAsset !== "" && title === "") {
+      userArray = {
+        imageURL: imageAsset,
+      };
+    }
+  
+  
 
-    fetchData();
+     const updatedocument = doc(firestore, "foodCategory", uid);
+    await updateDoc(updatedocument, userArray);
+    clearData();
+    setFields(true);
+    setMsg("updated successfully 😊")
+    setTimeout(() => {
+      setFields(false);
+    }, 4000);
+    // window.location.reload(true);
+    // console.log("updated",userArray,uid)
   };
 
-  const savefreshDetails = () => {
-    setIsLoading(true);
-    try {
-      if (!title ||  !imageAsset) {
-        setFields(true);
-        setMsg("Required fields can't be empty");
-        setAlertStatus("danger");
-        setTimeout(() => {
-          setFields(false);
-          setIsLoading(false);
-        }, 4000);
-      } else {
-        const datafreshcategory = {
-          id: `${Date.now()}`,
-          title: title,
-          imageURL: imageAsset,
-         
-        };
-        saveFreshCategory(datafreshcategory);
-        setIsLoading(false);
-        setFields(true);
-        setMsg("Data Uploaded successfully 😊");
-        setAlertStatus("success");
-        setTimeout(() => {
-          setFields(false);
-        }, 4000);
-        clearData();
-      }
-    } catch (error) {
-      console.log(error);
-      setFields(true);
-      setMsg("Error while uploading : Try AGain 🙇");
-      setAlertStatus("danger");
-      setTimeout(() => {
-        setFields(false);
-        setIsLoading(false);
-      }, 4000);
-    }
-
-    fetchfruitData();
-  };
 
   const clearData = () => {
     setTitle("");
     setImageAsset(null);
    
   };
-  const fetchfruitData = async () => {
-    // await getAllFreshCategories().then((datafreshcategory) => {
- localStorage.setItem("foodfreshCategory", JSON.stringify(getAllFreshCategories));
-      dispatch({
-        type: actionType.SET_FOOD_FRUIT_CATEGORIES,
-        foodfreshCategory: getAllFreshCategories,
-       
-      });
-    
-    // });
-  };
-
-  const fetchData = async () => {
-    await getAllCategories().then((datacategory) => {
- 
-      dispatch({
-        type: actionType.SET_FOOD_CATEGORIES,
-        foodCategory: datacategory,
-       
-      });
-      localStorage.setItem("foodCategory", JSON.stringify(datacategory));
-    });
-  };
-
- 
+  
+  
+  useEffect(() => {
+    getAllCategories()
+   
+  
+  }, []);
   return (
     <div className="w-full min-h-screen flex items-center bg-primary justify-center">
+     {food?.map((item)=>(
+        item.id === id && (
       <div className="w-[90%] md:w-[50%] border bg-primary border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
         {fields && (
           <motion.p
@@ -225,12 +175,12 @@ const CreateCategory = () => {
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Give me a title..."
+            placeholder={item.title}
             className="w-full h-full text-lg bg-transparent outline-none border-none placeholder:text-gray-400 text-textColor"
           />
         </div>
 
-  
+      
 
         <div className="group flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full h-225 md:h-340 cursor-pointer rounded-lg">
           {isLoading ? (
@@ -280,24 +230,20 @@ const CreateCategory = () => {
        
 
         <div className="flex flex-row justify-center gap-5">
+        
           <button
             type="button"
             className="ml-0 md:ml-auto w-full md:w-auto border-none outline-none bg-emerald-500 px-12 py-2 rounded-lg text-lg text-white font-semibold"
-            onClick={saveDetails}
+            onClick={() => updateuser(item.id)} 
           >
-            Save in HotDeals
-          </button>
-          <button
-            type="button"
-            className="ml-0 md:ml-auto w-full md:w-auto border-none outline-none bg-emerald-500 px-12 py-2 rounded-lg text-lg text-white font-semibold"
-            onClick={savefreshDetails}
-          >
-            Save in Fresh Fruits
+            update in HotDeals
           </button>
         </div>
       </div>
+        )
+      ))}
     </div>
   );
 };
 
-export default CreateCategory;
+export default UpdateHotCategory;

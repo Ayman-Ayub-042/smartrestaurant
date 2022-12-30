@@ -16,11 +16,21 @@ import { firestore } from "../firebase.config";
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-
-const Table = () => {
+const ShowBooking = () => {
   const navigate = useNavigate()
     const [TableValue, setTableValue]=useState()
-  const [Booking, setBooking]=useState()
+  const [BookingValue, setBookingValue]=useState()
+
+  const getAllBooking = async () => {
+    const items = await getDocs(
+      query(collection(firestore, "Booking"))
+      // query(collection(firestore, "Table"), orderBy("id", "desc"))
+    );
+  
+    setBookingValue(items.docs.map((doc) => doc.data()));
+  };
+
+
   const getAllTable = async () => {
     const items = await getDocs(
       query(collection(firestore, "Table"))
@@ -30,9 +40,10 @@ const Table = () => {
     setTableValue(items.docs.map((doc) => doc.data()));
   };
 
-  const deletetable = async (id) => {
+  const deletetable = async (uid) => {
+    console.log(uid)
   await deleteDoc(
-    doc(firestore, "Table",id)
+    doc(firestore, "Booking",uid)
   );
   
  
@@ -40,20 +51,6 @@ const Table = () => {
   
 };
 
-
-const onSave = (id) => {
-  Swal.fire({
-    title: 'Do you want to update the table?',
-   
-    showCancelButton: true,
-    confirmButtonText: 'yes',
-    
-  }).then((result) => {
-    if (result.isConfirmed) {
-     navigate(`/table/tableupdate/${id}`)
-    }
-  })
-}
 
 const onDelete = (id) => {
   Swal.fire({
@@ -74,23 +71,39 @@ const onDelete = (id) => {
   })
 }
 
+const onSave = (id) => {
+  Swal.fire({
+    title: 'Do you want to update the table?',
+   
+    showCancelButton: true,
+    confirmButtonText: 'yes',
+    
+  }).then((result) => {
+    if (result.isConfirmed) {
+     navigate(`/showbooking/bookingupdate/${id}`)
+    }
+  })
+}
+
   useEffect(() => {
     getAllTable()
-  
+  getAllBooking()
   }, []);
   return (
-    <div className='w-full  items-center justify-center p-20 bg-primary'>
+    <div className='w-full h-full items-center justify-center p-20 bg-primary'>
          <table  className='w-full h-full items-center justify-center  bg-primary'>
               <tr
   
                className='bg-gray-200 w-full justify-between'
               >
+                <th>User</th>
                 <th>Table</th>
-                <th>Seats</th>
+                <th>date</th>
+                <th>Start Time</th>
                 <th>Actions</th>
   
               </tr>
-             {TableValue?.map((item)=>(
+             {BookingValue?.map((val)=>(
                 <tr  style={{
                 backgroundColor: "transparent",
                 borderBottom: "0.5px solid rgba(124, 124, 124, 0.27)",
@@ -99,15 +112,16 @@ const onDelete = (id) => {
               }}>
 
      
-        <td>{item.title}</td>
-        <td>{item.seats}</td>
+        <td>{val.userData.fname}</td>
+        <td>{val.tabletitle}</td>
+        <td>{val.date}</td>
+        <td>{val.starttime}</td>
         
         <td>
           <div className="flex gap-2">
           <div  >
            <button className="text-white bg-red-500 p-1 justify-center items-center rounded-full w-10 h-10  "
-           onClick={()=>onDelete(item?.id)}
-              // onClick={(e) => deletetable(item?.id)}
+               onClick={()=>onDelete(val?.id)}
            >
           
             <MdDelete
@@ -118,9 +132,9 @@ const onDelete = (id) => {
              </button> 
             
             </div>
-            {/* <Link to={`/table/tableupdate/${item?.id}`}> */}
+            {/* <Link to={`/showbooking/bookingupdate/${val?.id}`}> */}
             <div  className="text-white bg-green-500 p-1 justify-center items-center rounded-full w-10 h-10  "
-           onClick={()=>onSave(item?.id)}
+              onClick={()=>onSave(val?.id)}
             >
             <MdEdit
             //    onClick={() => {  setShowupdatesubCatModal(true) }}
@@ -131,6 +145,7 @@ const onDelete = (id) => {
             </MdEdit>
             </div>
             {/* </Link> */}
+           
           </div>
         </td>
        
@@ -141,4 +156,4 @@ const onDelete = (id) => {
   )
 }
 
-export default Table
+export default ShowBooking

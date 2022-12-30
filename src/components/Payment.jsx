@@ -42,13 +42,13 @@ function Payment() {
     const [Booking, setBooking]=useState()
     const getAllTable = async () => {
       const items = await getDocs(
-        query(collection(firestore, "Table"))
+        query(collection(firestore, "Table"), where("id", "==", idd))
         // query(collection(firestore, "Table"), orderBy("id", "desc"))
       );
     
       setTableValue(items.docs.map((doc) => doc.data()));
       TableValue?.map((item)=>(
-        setBooking(item.advance)
+        setBooking(item.title)
       ))
       console.log(Booking)
     };
@@ -62,10 +62,7 @@ function Payment() {
     
     
     }, []);
-  const publishableKey =
-    'pk_test_51M86KYLRyv65o2axc8ITcci2KaZOMcrYE8VS73H8k4UzU37jZq5YsEwyKmlh5j1eN8yfe3mh6NiP0UMG3CAMWTFK00TBMt853R';
- 
-  const priceForStripe =Booking * 100;
+
   const item = {
     price: "price_1MKHClC9V03HKz1YL0NsCBim",
     quantity: 1
@@ -77,16 +74,17 @@ function Payment() {
     successUrl: `${window.location.origin}/success/${idd}/${date}/${time}`,
     cancelUrl: `${window.location.origin}/cancel`
   };
-  const redirectToCheckout = async () => {
-//     const datacategory = {
-//           id: `${Date.now()}`,
-//          tableid: idd,
-//           date: date ,
-//           starttime: time,
-//          userData
-//         };
-// saveBooking(datacategory)
-// console.log("success")
+  const redirectToCheckout = async (title) => {
+    const datacategory = {
+          id: `${Date.now()}`,  
+         tableid: idd,
+         tabletitle:title,
+          date: date ,
+          starttime: time,
+         userData
+        };
+saveBooking(datacategory)
+console.log("success")
 
  setUserData(null)
     setLoading(true);
@@ -142,13 +140,13 @@ function Payment() {
               <p className='text-xl font-semibold  items-center '>{category.advance}</p>
             </div>
 
-           <button onClick={redirectToCheckout} className='my-5 mx-5 w-[30%] px-14 py-4 bg-orange-500'>Proceed to pay</button>
+           <button onClick={()=>redirectToCheckout(category.title)} className='my-5 mx-5 w-[30%] px-14 py-4 bg-orange-500'>Proceed to pay</button>
         
      
       </div>
        )
        ))
-       ):(<div></div>)}
+       ):(<div></div>)} 
     </div>
   );
 }
