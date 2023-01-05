@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MdShoppingBasket, MdAdd, MdLogout ,MdSettings,MdDarkMode, MdScanner, MdQrCode} from "react-icons/md";
+import { MdShoppingBasket, MdAdd, MdLogout ,MdSettings,MdDarkMode, MdScanner, MdQrCode, MdBookOnline} from "react-icons/md";
 import { motion } from "framer-motion";
 import "../styles/dark.css"
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -130,6 +130,11 @@ const Header = () => {
               Booking
             </li>
             </Link>
+            <Link to={"/showvendor"}>
+            <li className="text-lg text-textColor hover:text-headingColor duration-100 transition-all ease-in-out cursor-pointer">
+              Vendor
+            </li>
+            </Link>
             </>
                 ):(
             <Link to={"/bookingtable"}>
@@ -200,6 +205,7 @@ const Header = () => {
                   
                 )}
                 {user && user.email === "admin@gmail.com" && (
+                  <>
                   <Link to={"/createtable"}>
                     <p
                       className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
@@ -208,6 +214,15 @@ const Header = () => {
                       Add Table <MdAdd />
                     </p>
                   </Link>
+                  <Link to={"/createvendor"}>
+                    <p
+                      className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
+                      onClick={() => setIsMenu(false)}
+                    >
+                      Add Vendor <MdAdd />
+                    </p>
+                  </Link>
+                  </>
                   
                 )}
                 
@@ -222,7 +237,18 @@ const Header = () => {
                   </Link>
                   
                 )}
-                
+                {(user && user.email === "admin@gmail.com") ? (
+                  <p></p>
+                ):(
+                  <Link to={"/userbooking"}>
+                    <p
+                      className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"
+                      onClick={() => setIsMenu(false)}
+                    >
+                     Show Bookings <MdBookOnline />
+                    </p>
+                  </Link>
+                )}
                 <Link to={"/edituser"}>
                     <p
                       className="px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-all duration-100 ease-in-out text-textColor text-base"

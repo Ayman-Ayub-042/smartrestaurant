@@ -19,12 +19,19 @@ const BookingTable = () => {
   const [bookingtime, setBookingtime] = useState("");
   const [bookingdate, setBookingdate] = useState("");
   const [search, setSearch] = useState("");
-  const [date, setDate] = useState("");
+  const [datee, setDatee] = useState("");
   const [time, setTime] = useState("");
+  const [etime, seteTime] = useState("");
+
+  const [date, setDate] = useState("");
+  const [starttime, setStartTime] = useState("");
+  const [endtime, setEndTime] = useState("");
   const [booked, setBooked] = useState("");
   const [TableValue, setTableValue]=useState()
   const [Booking, setBooking]=useState()
-  const bookingdate1 =[];
+  const [bookingexist, setBookingexist]=useState("")
+ 
+  const bookingexistid =[];
 
   const getAllTable = async () => {
     const items = await getDocs(
@@ -42,21 +49,36 @@ const BookingTable = () => {
     );
   
     setBooking(items.docs.map((doc) => doc.data()));
-    Booking?.map((val)=>{
-      settableId(val.tableid)
-      setBookingdate(val.date)
-      setBookingtime(val.starttime)
-      bookingdate1.push(bookingdate)
-  })
-  console.log(tableid,bookingdate,bookingtime)
+   
   };
-  console.log(tableid,bookingdate,bookingtime,bookingdate1)
+  console.log(tableid,bookingdate,bookingtime)
   
   const detail = async (title,id) => {
     setId(id);
       setFilter(title);
   };
-  console.log(booked,time,date)
+  console.log(booked,time,datee)
+
+  const searchtable =()=> {
+    setDate(datee)
+    setStartTime(time)
+    setEndTime(etime)
+    Booking.map((val)=>{
+      settableId(val.tableid)
+      setBookingdate(val.date)
+      setBookingtime(val.starttime)
+        TableValue.filter((item)=> {  
+                    
+      val.date == date && val.starttime == starttime && val.endtime == endtime && item.id == val.tableid && (
+     
+        setBookingexist(val.tableid)
+     
+       
+        )
+       } )
+      })
+console.log(bookingexist)
+  }
   useEffect(() => {
     getAllTable()
    getAllBooking()
@@ -64,10 +86,20 @@ const BookingTable = () => {
   }, []);
   return (
     <div className='w-full h-screen bg-primary'>
-      <div className=' py-5 mx-20 bg-white justify-center items-center'>
-        <input type="date" placeholder='' className='my-5 mx-5 px-6 py-4 bg-primary' value={date} onChange={(e)=>setDate(e.target.value)}/>
-        <input type="time" placeholder='' className='my-5 mx-5  px-10 py-4 bg-primary' value={time} onChange={(e)=>setTime(e.target.value)}/>
-        {/* <button className='my-5 mx-5  px-14 py-4 bg-orange-500'>Search</button> */}
+      <div className='flex flex-row py-5 mx-20 bg-white justify-center items-center'>
+      <div className='flex flex-col'>
+<p className='mx-5 my-3 text-xl text-headingColor font-serif font-bold'>Date</p>
+<input type="date" placeholder='' className='mb-5 mx-5 px-6 py-4 bg-primary' value={datee} onChange={(e)=>setDatee(e.target.value)}/>
+      </div>
+      <div className='flex flex-col'>
+<p className='mx-5 my-3 text-xl text-headingColor font-serif font-bold'>Start Time</p>
+        <input type="time" placeholder='' className='mb-5 mx-5  px-10 py-4 bg-primary' value={time} onChange={(e)=>setTime(e.target.value)}/>
+       </div>
+       <div className='flex flex-col'>
+<p className='mx-5 my-3 text-xl text-headingColor font-serif font-bold'>End Time</p>
+        <input type="time" placeholder='' className='mb-5 mx-5  px-10 py-4 bg-primary' value={etime} onChange={(e)=>seteTime(e.target.value)}/>
+       </div>
+        <button className='mb-5 mt-12 mx-5  px-14 py-4 bg-orange-500' onClick={()=>searchtable()}>Search</button>
       </div>
       <div className='xl:flex xl:flex-row lg:flex lg:flex-row'>
         <div className='xl:w-1/5 sm:w-[50%] m-10 ml-20 bg-orange-100'>
@@ -81,7 +113,7 @@ const BookingTable = () => {
           checked={booked === "2" ? "checked" : ""}
           onChange={(e) => setBooked(e.target.value)}
         />{" "}
-        A Section( 2 seats)
+         2 seats
          <br />
         <input
           type="radio"
@@ -90,7 +122,7 @@ const BookingTable = () => {
           // checked={booked === "False" ? "checked" : ""}
           onChange={(e) => setBooked(e.target.value)}
         />{" "}
-         B Section( 4 seats)
+         4 seats
         <br />
         <input
           type="radio"
@@ -99,7 +131,7 @@ const BookingTable = () => {
           // checked={booked === "False" ? "checked" : ""}
           onChange={(e) => setBooked(e.target.value)}
         />{" "}
-         C Section( 6 seats)
+         6 seats
         <br />
         <input
           type="radio"
@@ -108,7 +140,7 @@ const BookingTable = () => {
           // checked={booked === "False" ? "checked" : ""}
           onChange={(e) => setBooked(e.target.value)}
         />{" "}
-         D Section( 8 seats)
+          8 seats
         <br />
        
         </div>
@@ -119,10 +151,12 @@ const BookingTable = () => {
             TableValue.map((category) => (
               booked ? ( 
                  category.seats == booked && (
-                  date && time ? (
+                  date && starttime ? (
                    
                      
-              bookingdate == date && bookingtime == time && tableid == category.id ? (
+                    Booking.map((val)=>(
+                     
+                     val.date == date && val.starttime == starttime && val.endtime == endtime && val.tableid == category.id ? (
               
               <div 
               className='w-22 h-20 bg-orange-200 text-heading'  >
@@ -144,6 +178,7 @@ const BookingTable = () => {
             
               </div>
             )
+                    ))
          
                   ):(
                     <div
@@ -159,11 +194,10 @@ const BookingTable = () => {
               </div>
                   )
               )):(
-                date && time ? (
+                date && starttime ? (
 
-               Booking.map((val)=>(
-                     
-              val.date == date && val.starttime == time && val.tableid == category.id ? (
+                  bookingexist === category.id 
+                  ? (
               
               <div 
               className='w-22 h-20 bg-orange-200 text-heading'  >
@@ -185,7 +219,7 @@ const BookingTable = () => {
             
               </div>
             )
-               ))
+              
                 
                 ):(
                   <div
@@ -246,8 +280,14 @@ const BookingTable = () => {
            </div>
            <div className='flex flex-row gap-2'>
              
-             <h1>Time : </h1>
-             <p className='text-xl font-semibold items-center '>{time}</p>
+             <h1>Start Time : </h1>
+             <p className='text-xl font-semibold items-center '>{starttime}</p>
+           </div>
+
+           <div className='flex flex-row gap-2'>
+             
+             <h1>End Time : </h1>
+             <p className='text-xl font-semibold items-center '>{endtime}</p>
            </div>
 
             <div className='flex flex-row gap-2'>
@@ -260,7 +300,7 @@ const BookingTable = () => {
              <h1>Total Payment : </h1>
                <p className='text-xl font-semibold  items-center '>{category.advance}</p>
              </div>
-             <Link to={`/bookingtable/bookingpayment/${category.id}/${date}/${time}`}>
+             <Link to={`/bookingtable/bookingpayment/${category.id}/${date}/${starttime}/${endtime}`}>
             <button className='my-5 mx-5  px-14 py-4 bg-orange-500'>Continue</button>
             </Link>
          </div>

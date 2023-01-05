@@ -36,8 +36,8 @@ function Payment() {
   const { userData, setUserData } = useStepperContext();
   const [stripeError, setStripeError] = useState(null);
   const [isLoading, setLoading] = useState(false);
-    const { idd,date,time } = useParams();
-    console.log(idd)
+    const { idd,date,starttime,endtime } = useParams();
+    console.log(idd,starttime)
     const [TableValue, setTableValue]=useState()
     const [Booking, setBooking]=useState()
     const getAllTable = async () => {
@@ -71,7 +71,7 @@ function Payment() {
   const checkoutOptions = {
     lineItems: [item],
     mode: "payment",
-    successUrl: `${window.location.origin}/success/${idd}/${date}/${time}`,
+    successUrl: `${window.location.origin}/success`,
     cancelUrl: `${window.location.origin}/cancel`
   };
   const redirectToCheckout = async (title) => {
@@ -80,7 +80,8 @@ function Payment() {
          tableid: idd,
          tabletitle:title,
           date: date ,
-          starttime: time,
+          starttime: starttime,
+          endtime: endtime,
          userData
         };
 saveBooking(datacategory)
@@ -130,8 +131,14 @@ console.log("success")
            </div>
            <div className='flex flex-row gap-2'>
              
-             <h1>Time : </h1>
-             <p className='text-xl font-semibold items-center '>{time}</p>
+             <h1>Start Time : </h1>
+             <p className='text-xl font-semibold items-center '>{starttime}</p>
+           </div>
+
+           <div className='flex flex-row gap-2'>
+             
+             <h1>End Time : </h1>
+             <p className='text-xl font-semibold items-center '>{endtime}</p>
            </div>
 
             <div className='flex flex-row gap-2'>

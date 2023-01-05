@@ -12,7 +12,13 @@ export const saveBooking = async (data) => {
     merge: true,
   });
 };
-// Saving new Review
+// Saving new table
+export const saveVendor = async (data) => {
+  await setDoc(doc(firestore, "Vendor", `${Date.now()}`), data, {
+    merge: true,
+  });
+};
+// Saving new table
 export const saveTable = async (tabledata) => {
   await setDoc(doc(firestore, "Table", `${Date.now()}`), tabledata, {
     merge: true,

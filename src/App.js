@@ -8,7 +8,6 @@ import { getAllFoodItems } from "./utils/firebaseFunctions";
 import { actionType } from "./context/reducer";
 import CreateCategory from "./components/CreateCategory";
 import avatar from "./img/avatar.png"
-import Login from "./pages/Login";
 import Menu from "./components/Menu";
 import Service from "./components/Service";
 import Home from "./components/Home";
@@ -17,27 +16,30 @@ import { ThemeProvider } from 'styled-components';
 import Detail from "./components/Detail";
 import Index from "./components/Aboutus/Index";
 
-import Loader from 'react-loader-bubble'
+
 import Scanner from "./components/Scanner";
 import QrCodeReader from "./components/QrCodeReader";
 import CreateTable from "./components/CreateTable";
 import BookingTable from "./components/BookingTable";
 import Table from "./components/Table";
 import TableUpdate from "./components/TableUpdate";
-import BookingPayment from "./components/BookingPayment";
+
 import Payment from "./components/Payment";
 import Booking from "./components/Booking";
-import Success from "./components/Success";
+
 import Cancel from "./components/Cancel";
 import Multisteps from "./components/Multisteps";
 import Final from "./components/multistep/steps/Final";
 import ShowBooking from "./components/ShowBooking";
 import BookingUpdate from "./components/BookingUpdate";
-import UpdateCategory from "./components/UpdateHotCategory";
+import UserBooking from "./components/UserBooking";
 import UpdateHotCategory from "./components/UpdateHotCategory";
 import UpdateFreshCategory from "./components/UpdateFreshCategory";
 import UpdateFreshItem from "./components/UpdateFreshItem";
 import UpdateHotItem from "./components/UpdateHotItem";
+import CreateVendor from "./components/CreateVendor";
+import ShowVendor from "./components/ShowVendor";
+import UpdateVendor from "./components/UpdateVendor";
 
 const App = ({loading}) => {
   const [{ foodItems }, dispatch] = useStateValue();
@@ -174,6 +176,7 @@ const config = {
             <Route path="/updatehotcategory/:id" element={<UpdateHotCategory/>} />
             <Route path="/updatefreshcategory/:id" element={<UpdateFreshCategory/>} />
             <Route path="/edituser" element={<EditUser/>} />
+            <Route path="/createvendor" element={<CreateVendor/>} />
             <Route path="/menu" element={<Menu/>}/>
             <Route path="/home" element={<Home/>}/>
             <Route path="/service" element={<Service/>}/>
@@ -184,16 +187,19 @@ const config = {
             <Route path="/mainmenu" element={<MainContainer/>} />
             <Route path="/aboutus" element={<Index/>} />
             <Route path="/table" element={<Table/>} />
+            <Route path="/userbooking" element={<UserBooking/>} />
+            <Route path="/showvendor" element={<ShowVendor/>} />
+            <Route path="/showvendor/updatevendor/:id" element={<UpdateVendor/>} />
             <Route path="/table/tableupdate/:id" element={<TableUpdate/>} />
             <Route path="/bookingtable" element={<BookingTable/>} />
             <Route path="/payment/:idd" element={<Payment/>} />
             {/* <Route path="/bookingtable/bookingpayment/:idd" element={<Booking/>} /> */}
-            <Route path="/bookingtable/bookingpayment/:idd/:date/:time" element={<Multisteps/>} />
+            <Route path="/bookingtable/bookingpayment/:idd/:date/:starttime/:endtime" element={<Multisteps/>} />
             <Route path="/detail/:category/:id" element={<Detail />} />
             <Route path="/booking" element={<Booking/>} />
             <Route path="/showbooking" element={<ShowBooking/>} />
             <Route path="/showbooking/bookingupdate/:id" element={<BookingUpdate/>} />
-            <Route path="/success/:idd/:date/:time" element={<Final/>} />
+            <Route path="/success" element={<Final/>} />
           <Route path="/cancel" element={<Cancel/>} />
           </Routes>
           <ThemeProvider theme={theme}>

@@ -4,7 +4,7 @@ import "../styles/qrcode.css"
 import ReactToPrint, { PrintContextConsumer } from "react-to-print";
 
 const QrCodeReader = ({value}) => {
-  let componentRef = useRef();
+
   const [url, setUrl] = useState("");
   const [number, setNumber] = useState(0);
   const qrRef = useRef();

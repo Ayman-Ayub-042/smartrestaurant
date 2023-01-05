@@ -23,9 +23,9 @@ const BookingPayment = (id) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
-    const { idd ,date,time} = useParams();
+    const { idd ,date,starttime,endtime} = useParams();
   const [filter, setFilter] = useState("");
- console.log(id,idd)
+ console.log(id,idd,starttime,endtime)
   const [search, setSearch] = useState("");
   
   const [booked, setBooked] = useState("");
@@ -56,7 +56,7 @@ const BookingPayment = (id) => {
             }
         });
     }
-  console.log(booked,time,date)
+ 
   useEffect(() => {
     getAllTable()
   
@@ -188,8 +188,14 @@ const BookingPayment = (id) => {
            </div>
            <div className='flex flex-row gap-2'>
              
-             <h1>Time : </h1>
-             <p className='text-xl font-semibold items-center '>{time}</p>
+             <h1>Start Time : </h1>
+             <p className='text-xl font-semibold items-center '>{starttime}</p>
+           </div>
+
+           <div className='flex flex-row gap-2'>
+             
+             <h1>End Time : </h1>
+             <p className='text-xl font-semibold items-center '>{endtime}</p>
            </div>
 
             <div className='flex flex-row gap-2'>
